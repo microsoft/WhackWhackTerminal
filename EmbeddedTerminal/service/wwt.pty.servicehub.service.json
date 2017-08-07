@@ -1,0 +1,7 @@
+﻿{
+  "host": "node.x86",
+  "entryPoint": {
+    "scriptPath": "./pty.js",
+    "constructorFunction": "ServicePty"
+  }
+}

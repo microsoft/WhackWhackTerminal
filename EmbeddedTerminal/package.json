@@ -1,0 +1,11 @@
+{
+  "name": "embeddedterminal",
+  "version": "0.0.1",
+  "description": "embedded terminal ui in VS",
+  "author": "Daniel Griffen",
+  "dependencies": {
+    "node-pty": "^0.6.10",
+    "vscode-jsonrpc": "^3.3.1",
+    "xterm": "^2.8.1"
+  }
+}

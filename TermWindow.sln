@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedTerminal", "EmbeddedTerminal\EmbeddedTerminal.csproj", "{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{032FDE40-347B-4441-A50B-1BF2D4A0CEB2}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6DD9EF7B-5989-4A91-B377-56031864D116}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,35 @@
+﻿body, html {
+	height: 100%;
+	margin: 0px;
+}
+
+#content {
+	height: 100%;
+}
+
+
+.terminal {
+	color: white;
+}
+
+	.terminal .xterm-viewport {
+		background-color: black;
+	}
+
+	.terminal .xterm-color-15 {
+		color: white;
+	}
+
+
+	.terminal .xterm-selection div {
+		background-color: #fff;
+	}
+
+	.terminal.xterm-cursor-style-block.focus:not(.xterm-cursor-blink-on) .terminal-cursor {
+		background-color: #fff;
+		color: #000;
+	}
+
+	.terminal:not(.focus) .terminal-cursor {
+		outline-color: #fff;
+	}

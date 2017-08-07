@@ -1,0 +1,15 @@
+﻿Whack Whack Terminal
+2017-7-29 v0.2.3
+	- fixed resizing that was broken by last release
+
+2017-7-29 v0.2.2
+	- exit no longer zombies terminal, exiting the last terminal restarts
+	- extension size greatly reduced
+	- opening two VS instances will no longer zombie one shell
+	- copy and paste support (Ctrl+C/Ctrl+V and right-click)
+
+2017-7-25 v0.2.1
+	- Theme and blink the cursor
+
+2017-7-25 v0.2.0
+	- Initial MVP Release
