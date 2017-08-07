@@ -1,4 +1,21 @@
 
+# Building
+## Prerequisites
+You need the following components installed in order to build WhackWhackTerminal
+- Visual Studio 2017 with extensibility workload
+- Node.js v6.11.2 LTS (32-bit)
+- Python 2.7
+- Visual C++ Build Tools 2015
+
+## Steps
+Once you have the prerequisites you can begin setting up your project to build.
+1. Open a terminal window.
+2. Run `npm config set msvs_version 2015`
+3. Navigate to the EmbbededTerminal project directory
+4. Run `npm install`
+
+After this you can simply open the solution file in Visual Studio and hit f5 to start debugging.
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
