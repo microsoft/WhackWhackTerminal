@@ -25,7 +25,7 @@
 		background-color: #fff;
 	}
 
-	.terminal.xterm-cursor-style-block.focus:not(.xterm-cursor-blink-on) .terminal-cursor {
+	.terminal.focus:not(.xterm-cursor-style-underline):not(.xterm-cursor-style-bar) .terminal-cursor {
 		background-color: #fff;
 		color: #000;
 	}

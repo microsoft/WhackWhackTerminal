@@ -27,7 +27,7 @@
 						<local:CSSDeclaration Attribute="BackgroundColor" Value="{x:Static platformui:EnvironmentColors.ToolboxBackgroundColorKey}" />
 					</local:CustomCSSRule.Declarations>
 				</local:CustomCSSRule>
-				<local:CustomCSSRule Selector=".terminal.xterm-cursor-style-block.focus:not(.xterm-cursor-blink-on) .terminal-cursor">
+				<local:CustomCSSRule Selector=".terminal.focus:not(.xterm-cursor-style-underline):not(.xterm-cursor-style-bar) .terminal-cursor">
 					<local:CustomCSSRule.Declarations>
 						<local:CSSDeclaration Attribute="Color" Value="{x:Static platformui:EnvironmentColors.ToolboxBackgroundColorKey}" />
 						<local:CSSDeclaration Attribute="BackgroundColor" Value="{x:Static platformui:EnvironmentColors.ToolboxContentTextColorKey}" />
