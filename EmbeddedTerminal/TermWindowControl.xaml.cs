@@ -21,6 +21,7 @@
     /// </summary>
     public partial class TermWindowControl : UserControl
     {
+        public static TermWindowPackage Package = null;
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
@@ -28,7 +29,7 @@
         {
             this.InitializeComponent();
 
-
+            
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;
@@ -85,7 +86,7 @@
 
         public void InitTerm(int cols, int rows, string directory)
         {
-            rpc.InvokeAsync("initTerm", cols, rows, directory);
+            rpc.InvokeAsync("initTerm", TermWindowControl.Package.OptionTerminal.ToString(), cols, rows, directory);
         }
 
         public void ResizeTerm(int cols, int rows)

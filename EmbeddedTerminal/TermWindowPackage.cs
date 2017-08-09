@@ -51,8 +51,18 @@ namespace EmbeddedTerminal
         /// </summary>
         protected override void Initialize()
         {
+            TermWindowControl.Package = this;
             TermWindowCommand.Initialize(this);
             base.Initialize();
+        }
+
+        public DefaultTerminal OptionTerminal
+        {
+            get
+            {
+                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
+                return page.OptionTerminal;
+            }
         }
 
         #endregion
