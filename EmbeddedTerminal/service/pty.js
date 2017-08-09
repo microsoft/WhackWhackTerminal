@@ -30,8 +30,11 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir) {
         case 'CMD':
             var shelltospawn = cmdPath;
             break;
-        default:
+        case 'WSLBash':
             var shelltospawn = bashPath;
+            break;
+        default:
+            var shelltospawn = powerShellPath;
     }
 
     if (this.ptyConnection != null) {
