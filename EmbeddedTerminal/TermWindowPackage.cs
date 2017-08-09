@@ -35,6 +35,7 @@ namespace EmbeddedTerminal
     [ProvideToolWindow(typeof(TermWindow))]
     [Guid(TermWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
     public sealed class TermWindowPackage : Package
     {
         /// <summary>
