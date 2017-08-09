@@ -183,6 +183,10 @@
     <Content Include="node_modules\xterm\src\Viewport.ts" />
     <Content Include="node_modules\xterm\src\xterm.css" />
     <Content Include="node_modules\xterm\src\xterm.js" />
+    <Content Include="view\linkMatcher.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
