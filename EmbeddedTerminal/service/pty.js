@@ -6,8 +6,11 @@ var pty = require('node-pty');
 // you may need to edit a file that gets pulled down, was a bug when i did. search and remove the obvious 'noif'
 var rpc = require('vscode-jsonrpc');
 
-const userHome = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-const shell = 'powershell.exe';
+const is32ProcessOn64Windows = process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
+
+const powerShellPath = `${process.env.windir}\\${is32ProcessOn64Windows ? 'Sysnative' : 'System32'}\\WindowsPowerShell\\v1.0\\powershell.exe`;
+const cmdPath = `${process.env.windir}\\${is32ProcessOn64Windows ? 'Sysnative' : 'System32'}\\cmd.exe`;
+const bashPath = `${process.env.windir}\\${is32ProcessOn64Windows ? 'Sysnative' : 'System32'}\\bash.exe`;
 
 function ServicePty(stream, _host) {
     this.connection = rpc.createMessageConnection(new rpc.StreamMessageReader(stream), new rpc.StreamMessageWriter(stream));
@@ -24,7 +27,7 @@ ServicePty.prototype.initTerm = function (cols, rows, startDir) {
         this.ptyConnection.destroy();
     }
 
-    this.ptyConnection = pty.spawn(shell, [], {
+    this.ptyConnection = pty.spawn(powerShellPath, [], {
         name: 'vs-integrated-terminal',
         cols: cols,
         rows: rows,
