@@ -10,6 +10,7 @@ function TermView() {
     this.term.open(document.getElementById('content'));
     this.term.fit();
     this.term.on('data', this.termData.bind(this));
+
     window.addEventListener("resize", this.resizeHandler.bind(this), false);
 
     this.initTerm();
@@ -49,6 +50,10 @@ TermView.prototype.reInitTerm = function (code) {
 
 TermView.prototype.termData = function (data) {
     window.external.TermData(data);
+}
+
+TermView.prototype.focus = function() {
+	this.term.focus();
 }
 
 TermView.prototype.resizeHandler = function () {
