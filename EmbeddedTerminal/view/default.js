@@ -14,6 +14,7 @@ function TermView() {
 
     this.initTerm();
     this.registerKeyboardHandlers();
+    registerLinkMatcher(this.term);
 }
 
 TermView.prototype.solutionDir = function () {
