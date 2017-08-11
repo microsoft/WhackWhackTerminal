@@ -8,14 +8,15 @@
 
     TerminalLinkHandler.prototype.registerLocalLinkHandler = function() {
 
-        return this.terminal.registerLinkMatcher(this.localLinkRegex, this.handleLocalLink, {
-            validationCallback: this.validateLocalLink,
+        return this.terminal.registerLinkMatcher(this.localLinkRegex, this.handleLocalLink.bind(this), {
+            validationCallback: this.validateLocalLink.bind(this),
             priority: LOCAL_LINK_PRIORITY
         });
     }
 
     TerminalLinkHandler.prototype.handleLocalLink = function(event, uri) {
         window.external.HandleLocalLink(uri);
+		event.preventDefault();
     }
 
     TerminalLinkHandler.prototype.validateLocalLink = function (link, element, callback) {

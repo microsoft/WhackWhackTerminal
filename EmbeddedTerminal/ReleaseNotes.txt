@@ -1,4 +1,9 @@
 ﻿Whack Whack Terminal
+2017-8-10 v0.2.5
+	- Added an options menu, user can select default shell and choose a custom CSS file
+	- Added error-links, build errors can be clicked on to take you to their location in a file
+	- fixed terminal not focusing when shortcut was pressed
+
 2017-8-7  v0.2.4
 	- updated codebase to no longer use internal apis
 	- fixed some window focus issues

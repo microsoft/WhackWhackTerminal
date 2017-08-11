@@ -68,7 +68,7 @@
     <Compile Include="TermWindowPackage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BrandWhackWhackTerminal%4016x.png">
+    <Content Include="BrandWhackWhackTerminal_256x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
