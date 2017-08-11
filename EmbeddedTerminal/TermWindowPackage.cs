@@ -51,9 +51,15 @@ namespace EmbeddedTerminal
         /// </summary>
         protected override void Initialize()
         {
-            TermWindowControl.Package = this;
+            TermWindowPackage.Instance = this;
             TermWindowCommand.Initialize(this);
             base.Initialize();
+        }
+
+        public static TermWindowPackage Instance
+        {
+            get;
+            private set;
         }
 
         public DefaultTerminal OptionTerminal
@@ -62,6 +68,15 @@ namespace EmbeddedTerminal
             {
                 TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
                 return page.OptionTerminal;
+            }
+        }
+
+        public string OptionCustomCSSPath
+        {
+            get
+            {
+                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
+                return page.CustomCSSPath;
             }
         }
 
