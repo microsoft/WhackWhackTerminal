@@ -57,6 +57,9 @@
   <ItemGroup>
     <Compile Include="BetterBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TerminalOptionPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TermWindow.cs" />
     <Compile Include="TermWindowCommand.cs" />
     <Compile Include="TermWindowControl.xaml.cs">
@@ -67,6 +70,10 @@
   <ItemGroup>
     <Content Include="BrandWhackWhackTerminal%4016x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="view\custom.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="view\default.css">

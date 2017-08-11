@@ -35,6 +35,7 @@ namespace EmbeddedTerminal
     [ProvideToolWindow(typeof(TermWindow))]
     [Guid(TermWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
     public sealed class TermWindowPackage : Package
     {
         /// <summary>
@@ -50,8 +51,33 @@ namespace EmbeddedTerminal
         /// </summary>
         protected override void Initialize()
         {
+            TermWindowPackage.Instance = this;
             TermWindowCommand.Initialize(this);
             base.Initialize();
+        }
+
+        public static TermWindowPackage Instance
+        {
+            get;
+            private set;
+        }
+
+        public DefaultTerminal OptionTerminal
+        {
+            get
+            {
+                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
+                return page.OptionTerminal;
+            }
+        }
+
+        public string OptionCustomCSSPath
+        {
+            get
+            {
+                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
+                return page.CustomCSSPath;
+            }
         }
 
         #endregion

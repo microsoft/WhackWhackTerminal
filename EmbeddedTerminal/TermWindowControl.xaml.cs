@@ -28,7 +28,7 @@
         {
             this.InitializeComponent();
 
-
+            
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;
@@ -85,7 +85,7 @@
 
         public void InitTerm(int cols, int rows, string directory)
         {
-            rpc.InvokeAsync("initTerm", cols, rows, directory);
+            rpc.InvokeAsync("initTerm", TermWindowPackage.Instance?.OptionTerminal.ToString(), cols, rows, directory);
         }
 
         public void ResizeTerm(int cols, int rows)
