@@ -29,17 +29,26 @@
         {
             this.InitializeComponent();
 
-            
+            this.Focusable = true;
+            this.GotFocus += TermWindowControl_GotFocus;
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;
 
-            var helper = new ScriptHelper(clientStream, this.terminalView, Dispatcher.CurrentDispatcher);
+            var helper = new ScriptHelper(this, clientStream, Dispatcher.CurrentDispatcher);
             this.terminalView.ScriptingObject = helper;
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "view\\default.html").Replace("\\\\", "\\");
 
             this.terminalView.Navigate(new Uri(rootPath));
+        }
+
+        private void TermWindowControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // We call focus here because if we don't, the next call will prevent the toolbar from turning blue.
+            // No functionality is lost when this happens but it is not consistent with VS design conventions.
+            this.Focus();
+            this.terminalView.Invoke("invokeTerm", "focus");
         }
     }
 
@@ -47,6 +56,7 @@
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public class ScriptHelper
     {
+        #region regexconsts
         /* Regex's originally from VSCode.
          * VSCode is licensed under the MIT license, original sources and license.txt can be found here:
          * https://github.com/Microsoft/vscode
@@ -74,15 +84,15 @@
 
         // Each line and column clause have 6 groups (ie no. of expressions in round brackets)
         const int lineAndColumnClauseGroupCount = 6;
-
+        #endregion
 
         private JsonRpc rpc;
-        private BetterBrowser browser;
+        private TermWindowControl uiControl;
         private Dispatcher ui;
-        public ScriptHelper(Stream serviceStream, BetterBrowser browser, Dispatcher ui)
+        public ScriptHelper(TermWindowControl uiControl, Stream serviceStream, Dispatcher ui)
         {
             this.rpc = JsonRpc.Attach(serviceStream, this);
-            this.browser = browser;
+            this.uiControl = uiControl;
             this.ui = ui;
         }
 
@@ -128,7 +138,7 @@
         {
             ui.InvokeAsync(() =>
             {
-                this.browser.Invoke("invokeTerm", "ptyData", data);
+                this.uiControl.terminalView.Invoke("invokeTerm", "ptyData", data);
             });
         }
 
@@ -136,7 +146,7 @@
         {
             ui.InvokeAsync(() =>
             {
-                this.browser.Invoke("invokeTerm", "reInitTerm", code);
+                this.uiControl.terminalView.Invoke("invokeTerm", "reInitTerm", code);
             });
         }
         #endregion
