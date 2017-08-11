@@ -47,6 +47,10 @@
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public class ScriptHelper
     {
+        /* Regex's originally from VSCode.
+         * VSCode is licensed under the MIT license, original sources and license.txt can be found here:
+         * https://github.com/Microsoft/vscode
+         */
         const string winDrivePrefix = "[a-zA-Z]:";
         const string winPathPrefix = "(" + winDrivePrefix + "|\\.\\.?|\\~)";
         const string winPathSeparatorClause = "(\\\\|\\/)";
@@ -104,6 +108,7 @@
             return Clipboard.GetText();
         }
 
+        #region terminal controllers
         public void TermData(string data)
         {
             rpc.InvokeAsync("termData", data);
@@ -134,6 +139,13 @@
                 this.browser.Invoke("invokeTerm", "reInitTerm", code);
             });
         }
+        #endregion
+
+        #region error link helpers
+        public string GetLinkRegex()
+        {
+            return localLinkPattern.ToString();
+        }
 
         public void HandleLocalLink(string link)
         {
@@ -144,10 +156,10 @@
             var lcinfo = this.ExtractLineColumnInfo(link);
 
             EnvDTE80.DTE2 dte2;
-            dte2 = (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE");
+            dte2 = (EnvDTE80.DTE2)Marshal.GetActiveObject("VisualStudio.DTE");
             dte2.MainWindow.Activate();
             EnvDTE.Window w = dte2.ItemOperations.OpenFile(url, EnvDTE.Constants.vsViewKindTextView);
-            ((EnvDTE.TextSelection)dte2.ActiveDocument.Selection).MoveToDisplayColumn(lcinfo.Item1, lcinfo.Item2, false);
+            ((TextSelection)dte2.ActiveDocument.Selection).MoveToDisplayColumn(lcinfo.Item1, lcinfo.Item2, false);
         }
 
         public bool ValidateLocalLink(string link)
@@ -236,6 +248,6 @@
 
             return new Tuple<int, int>(row, col);
         }
-
+#endregion
     }
 }
