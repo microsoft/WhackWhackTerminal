@@ -159,35 +159,33 @@
 
         public void HandleLocalLink(string link)
         {
-            link = this.PreprocessPath(link);
-
-             
             var url = this.ExtractLinkUrl(link);
+            var path = this.PreprocessPath(url);
+
             var lcinfo = this.ExtractLineColumnInfo(link);
 
             EnvDTE80.DTE2 dte2;
             dte2 = (EnvDTE80.DTE2)Marshal.GetActiveObject("VisualStudio.DTE");
             dte2.MainWindow.Activate();
-            EnvDTE.Window w = dte2.ItemOperations.OpenFile(url, EnvDTE.Constants.vsViewKindTextView);
-            ((TextSelection)dte2.ActiveDocument.Selection).MoveToDisplayColumn(lcinfo.Item1, lcinfo.Item2, false);
+            EnvDTE.Window w = dte2.ItemOperations.OpenFile(path, EnvDTE.Constants.vsViewKindTextView);
+            ((TextSelection)dte2.ActiveDocument.Selection).MoveToDisplayColumn(lcinfo.Item1, lcinfo.Item2);
         }
 
         public bool ValidateLocalLink(string link)
         {
-
-            link = this.PreprocessPath(link);
-            if (link == null)
-            {
-                return false;
-            }
             var url = this.ExtractLinkUrl(link);
             if (url == null)
             {
                 return false;
             }
 
+            var path = this.PreprocessPath(url);
+            if (link == null)
+            {
+                return false;
+            }
 
-            return File.Exists(url);
+            return File.Exists(path);
         }
 
         private string PreprocessPath(string path)

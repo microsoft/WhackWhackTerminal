@@ -1,4 +1,7 @@
 ﻿Whack Whack Terminal
+2017-8-11 v0.2.6
+	- Fix issue with parsing file paths
+
 2017-8-10 v0.2.5
 	- Added an options menu, user can select default shell and choose a custom CSS file
 	- Added error-links, build errors can be clicked on to take you to their location in a file
