@@ -15,7 +15,9 @@
     }
 
     TerminalLinkHandler.prototype.handleLocalLink = function(event, uri) {
-        window.external.HandleLocalLink(uri);
+		// We call the handle function on a small timeout to cause it to happen after the click event has fully
+		// propogated. This ensures that focus properly transfers to the editor.
+        setTimeout(function() { window.external.HandleLocalLink(uri); }, 1);
 		event.preventDefault();
     }
 

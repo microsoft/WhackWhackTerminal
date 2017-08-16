@@ -164,11 +164,16 @@
 
             var lcinfo = this.ExtractLineColumnInfo(link);
 
-            EnvDTE80.DTE2 dte2;
-            dte2 = (EnvDTE80.DTE2)Marshal.GetActiveObject("VisualStudio.DTE");
-            dte2.MainWindow.Activate();
-            EnvDTE.Window w = dte2.ItemOperations.OpenFile(path, EnvDTE.Constants.vsViewKindTextView);
-            ((TextSelection)dte2.ActiveDocument.Selection).MoveToDisplayColumn(lcinfo.Item1, lcinfo.Item2);
+
+            VsShellUtilities.OpenDocument(TermWindowPackage.Instance, path, Guid.Empty, out _, out _, out _, out var textView);
+            if (textView != null)
+            {
+                // Indexing in an IVsTextView is zero-based, whereas values returned from a build should be one-based.
+                textView.SetCaretPos(lcinfo.Item1 - 1, lcinfo.Item2 - 1);
+                textView.CenterLines(lcinfo.Item1 - 1, 1);
+
+                textView.SendExplicitFocus();
+            }
         }
 
         public bool ValidateLocalLink(string link)
