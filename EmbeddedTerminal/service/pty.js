@@ -38,6 +38,8 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir) {
     }
 
     if (this.ptyConnection != null) {
+        // We dont want the exit listeners firing, otherwise we could get an infinite reinit loop
+        this.ptyConnection.removeAllListeners('exit');
         this.ptyConnection.destroy();
     }
 
