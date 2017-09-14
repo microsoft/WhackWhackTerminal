@@ -76,7 +76,14 @@ namespace EmbeddedTerminal
         private void Browser_PreviewKeyDown(object sender, System.Windows.Forms.PreviewKeyDownEventArgs e)
         {
             // Forces the terminal to capture the shortcut instead of sending it to VS
-            e.IsInputKey = false;
+            if (e.Control && (e.KeyCode == System.Windows.Forms.Keys.P || e.KeyCode == System.Windows.Forms.Keys.O || e.KeyCode == System.Windows.Forms.Keys.Tab))
+            {
+                e.IsInputKey = true;
+            }
+            else
+            {
+                e.IsInputKey = false;
+            }
         }
 
         private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
