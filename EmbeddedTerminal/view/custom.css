@@ -3,13 +3,20 @@
 * Reference visit https://github.com/sourcelair/xterm.js/blob/2b92996d7c0c8a6f161c90cb96528858979a50fd/src/xterm.css. *
 * Styling that is not set here will be controlled by the extension.                                                   *
 *                                                                                                                     *
-* MODIFYING CSS STYLES OUTSIDE OF COLORS IS ENTIRELY UNSUPPORTED, DO SO AT YOUR OWN RISK                              *
+* Supported CSS Modifications:                                                                                        *
+* - all color changes                                                                                                 *
+* - font size                                                                                                         *
+* - font family                                                                                                       *
+*                                                                                                                     *
+* ANY OTHER CSS MODIFICATION ARE NOT SUPPORTED AND DONE AT YOUR OWN RISK                                              *
 ***********************************************************************************************************************/
 
 
 /* This class controls the default text color of the terminal */
 .terminal {
 	color: default;
+    font-family: Consolas;
+    font-size: 12pt;
 }
 
 	/* Can be used to control the background color of the terminal */
