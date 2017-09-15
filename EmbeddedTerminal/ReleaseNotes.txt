@@ -1,4 +1,9 @@
 ﻿Whack Whack Terminal
+2017-9-15 v0.2.7
+	- Goto error will now focus on the editor correctly in all situations
+	- Ctrl+O, Ctrl+P, and Ctrl+Tab are now handled by VS
+	- Font options were added to the css template
+
 2017-8-11 v0.2.6
 	- Fix issue with parsing file paths
 
