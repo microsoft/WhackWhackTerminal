@@ -1,0 +1,5 @@
+image: Visual Studio 2017
+
+build_script:
+  - nuget restore -Verbosity quiet
+  - msbuild .\src\EmbeddedTerminal\EmbeddedTerminal.csproj /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
