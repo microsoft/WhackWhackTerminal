@@ -5,5 +5,7 @@ install:
 
 build_script:
   - nuget restore -Verbosity quiet
+  - cd EmbeddedTerminal
   - npm install
+  - cd ..
   - msbuild .\EmbeddedTerminal\EmbeddedTerminal.csproj /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
