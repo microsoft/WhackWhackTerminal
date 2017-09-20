@@ -16,13 +16,14 @@ function ServicePty(stream, _host) {
     this.connection = rpc.createMessageConnection(new rpc.StreamMessageReader(stream), new rpc.StreamMessageWriter(stream));
     this.ptyConnection = null;
 
-    this.connection.onRequest('initTerm', (shell, cols, rows, start) => this.initTerm(shell, cols, rows, start));
+    this.connection.onRequest('initTerm', (shell, cols, rows, start, argument) => this.initTerm(shell, cols, rows, start, argument));
     this.connection.onRequest('termData', (data) => this.termData(data));
     this.connection.onRequest('resizeTerm', (cols, rows) => this.resizeTerm(cols, rows));
     this.connection.listen();
 }
 
-ServicePty.prototype.initTerm = function (shell, cols, rows, startDir) {
+ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument) {
+    var startupArg = ' ' + argument;
     switch (shell) {
         case 'Powershell':
             var shelltospawn = powerShellPath;
@@ -43,7 +44,7 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir) {
         this.ptyConnection.destroy();
     }
 
-    this.ptyConnection = pty.spawn(shelltospawn, [], {
+    this.ptyConnection = pty.spawn(shelltospawn, startupArg, {
         name: 'vs-integrated-terminal',
         cols: cols,
         rows: rows,

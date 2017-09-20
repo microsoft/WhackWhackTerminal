@@ -80,6 +80,15 @@ namespace EmbeddedTerminal
             }
         }
 
+        public string OptionStartupArgument
+        {
+            get
+            {
+                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
+                return page.StartupArgument;
+            }
+        }
+
         #endregion
     }
 }

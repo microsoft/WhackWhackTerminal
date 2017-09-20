@@ -14,6 +14,7 @@ namespace EmbeddedTerminal
     {
         private DefaultTerminal term = DefaultTerminal.Powershell;
         string customCSSPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "view\\custom.css").Replace("\\\\", "\\");
+        string startupArgument = string.Empty;
 
         [Category("Whack Whack Terminal")]
         [DisplayName("Default Shell")]
@@ -29,6 +30,14 @@ namespace EmbeddedTerminal
         {
             get { return customCSSPath; }
             set { customCSSPath = value; }
+        }
+
+        [Category("Whack Whack Terminal")]
+        [DisplayName("Startup Argument")]
+        public string StartupArgument
+        {
+            get { return startupArgument; }
+            set { startupArgument = value; }
         }
     }
 
