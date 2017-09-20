@@ -126,7 +126,7 @@
 
         public void InitTerm(int cols, int rows, string directory)
         {
-            rpc.InvokeAsync("initTerm", TermWindowPackage.Instance?.OptionTerminal.ToString(), cols, rows, directory);
+            rpc.InvokeAsync("initTerm", TermWindowPackage.Instance?.OptionTerminal.ToString(), cols, rows, directory, TermWindowPackage.Instance?.OptionStartupArgument);
         }
 
         public void ResizeTerm(int cols, int rows)
