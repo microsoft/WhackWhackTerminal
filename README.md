@@ -1,3 +1,4 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/var20s6rdqf8bfv5/branch/master?svg=true)](https://ci.appveyor.com/project/dgriffen/whackwhackterminal/branch/master)
 
 # Building
 ## Prerequisites
