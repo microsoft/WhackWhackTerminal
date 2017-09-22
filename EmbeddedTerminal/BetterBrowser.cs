@@ -56,9 +56,6 @@ namespace EmbeddedTerminal
         {
             this.CustomCSS = new List<CustomCSSRule>();
 
-            //TODO: Investigate if there is a way to turn off this feature for only our browser instance
-            CoInternetSetFeatureEnabled(8, 0x00000002, false);
-
             System.Windows.Forms.Integration.WindowsFormsHost host =
         new System.Windows.Forms.Integration.WindowsFormsHost();
 
