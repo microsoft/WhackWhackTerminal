@@ -1,4 +1,8 @@
 ﻿Whack Whack Terminal
+2017-9-22 v0.2.8
+    - New option to pass command line parameters to the terminal on startup
+	- Fix terminal turning of local machine lockdown for the entire process
+
 2017-9-15 v0.2.7
 	- Goto error will now focus on the editor correctly in all situations
 	- Ctrl+O, Ctrl+P, and Ctrl+Tab are now handled by VS
