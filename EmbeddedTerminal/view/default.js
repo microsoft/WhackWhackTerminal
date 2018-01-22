@@ -2,6 +2,7 @@
 
 function TermView() {
     this.resizeTimeout = null;
+    fit.apply(Terminal);
     this.term = new Terminal({
         cursorBlink: true,
         cols: 80,
@@ -10,7 +11,7 @@ function TermView() {
     this.term.open(document.getElementById('content'));
     this.term.fit();
     this.term.on('data', this.termData.bind(this));
-
+    this.term.setOption('fontFamily', 'Fira Code');
     window.addEventListener("resize", this.resizeHandler.bind(this), false);
 
     this.initTerm();
