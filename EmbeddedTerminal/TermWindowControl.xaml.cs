@@ -20,17 +20,20 @@
     /// <summary>
     /// Interaction logic for TermWindowControl.
     /// </summary>
-    public partial class TermWindowControl : UserControl
+    public partial class TermWindowControl : UserControl, IDisposable
     {
+        public TermWindow window;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
-        public TermWindowControl()
+        public TermWindowControl(TermWindow window)
         {
             this.InitializeComponent();
 
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
+            this.window = window;
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;
@@ -41,6 +44,12 @@
             string rootPath = Path.Combine(extensionDirectory, "view\\default.html").Replace("\\\\", "\\");
 
             this.terminalView.Navigate(new Uri(rootPath));
+        }
+
+        public void Dispose()
+        {
+            var helper = (ScriptHelper)this.terminalView.ScriptingObject;
+            helper.CloseTerm();
         }
 
         private void TermWindowControl_GotFocus(object sender, RoutedEventArgs e)
@@ -134,6 +143,11 @@
             rpc.InvokeAsync("resizeTerm", cols, rows);
         }
 
+        public void CloseTerm()
+        {
+            rpc.InvokeAsync("closeTerm");
+        }
+
         public void PtyData(string data)
         {
             ui.InvokeAsync(() =>
@@ -142,12 +156,12 @@
             });
         }
 
-        public void ReInitTerm(int? code)
+        public void PtyExit(int? code)
         {
-            ui.InvokeAsync(() =>
+            if (this.uiControl.window.Frame is IVsWindowFrame windowFrame)
             {
-                this.uiControl.terminalView.Invoke("invokeTerm", "reInitTerm", code);
-            });
+                windowFrame?.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+            }
         }
         #endregion
 

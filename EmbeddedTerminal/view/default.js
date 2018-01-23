@@ -40,15 +40,6 @@ TermView.prototype.initTerm = function () {
     window.external.InitTerm(term.cols, term.rows, this.solutionDir());
 }
 
-TermView.prototype.reInitTerm = function (code) {
-    if (code != null) {
-        this.term.write('terminal exited with code: ' + code + ', restarting the terminal\n\r');
-    } else {
-        this.term.write('terminal was exited, restarting terminal instance\n\r');
-    }
-    this.initTerm();
-}
-
 TermView.prototype.termData = function (data) {
     window.external.TermData(data);
 }

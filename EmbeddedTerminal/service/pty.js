@@ -19,10 +19,15 @@ function ServicePty(stream, _host) {
     this.connection.onRequest('initTerm', (shell, cols, rows, start, argument) => this.initTerm(shell, cols, rows, start, argument));
     this.connection.onRequest('termData', (data) => this.termData(data));
     this.connection.onRequest('resizeTerm', (cols, rows) => this.resizeTerm(cols, rows));
+    this.connection.onRequest('closeTerm', () => this.closeTerm());
     this.connection.listen();
 }
 
 ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument) {
+    if (this.ptyConnection !== null) {
+        return;
+    }
+
     var startupArg = ' ' + argument;
     switch (shell) {
         case 'Powershell':
@@ -38,12 +43,6 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
             var shelltospawn = powerShellPath;
     }
 
-    if (this.ptyConnection != null) {
-        // We dont want the exit listeners firing, otherwise we could get an infinite reinit loop
-        this.ptyConnection.removeAllListeners('exit');
-        this.ptyConnection.destroy();
-    }
-
     this.ptyConnection = pty.spawn(shelltospawn, startupArg, {
         name: 'vs-integrated-terminal',
         cols: cols,
@@ -52,8 +51,8 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
         env: process.env
     });
 
-    this.ptyConnection.on('data', (data) => this.ptyData(data));
-    this.ptyConnection.on('exit', (code) => this.ptyExit(code));
+    this.ptyConnection.on('data', (data) => this.connection.sendRequest('PtyData', [data]));
+    this.ptyConnection.on('exit', (code) => this.connection.sendRequest('PtyExit', [code]));
 }
 
 ServicePty.prototype.termData = function (data) {
@@ -68,12 +67,10 @@ ServicePty.prototype.resizeTerm = function (cols, rows) {
     }
 }
 
-ServicePty.prototype.ptyData = function (data) {
-    this.connection.sendRequest('PtyData', [data]);
-}
-
-ServicePty.prototype.ptyExit = function (code) {
-    this.connection.sendRequest('ReInitTerm', [code]);
+ServicePty.prototype.closeTerm = function () {
+    if (this.ptyConnection != null) {
+        this.ptyConnection.destroy();
+    }
 }
 
 exports.ServicePty = ServicePty;

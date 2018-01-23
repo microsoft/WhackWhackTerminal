@@ -28,34 +28,17 @@ namespace EmbeddedTerminal
     /// </summary>
     public class BetterBrowser : ContentControl
     {
-        [DllImport("urlmon.dll")]
-        [PreserveSig]
-        [return: MarshalAs(UnmanagedType.Error)]
-        static extern int CoInternetSetFeatureEnabled(int FeatureEntry, uint dwFlags, [MarshalAs(UnmanagedType.Bool)]bool fEnable);
-
-        public static readonly DependencyProperty CustomCSSProperty = DependencyProperty.Register(
-      "CustomCSS", typeof(IList), typeof(BetterBrowser), new PropertyMetadata(new List<CustomCSSRule>()));
-
-        public IList CustomCSS
-        {
-            get { return (IList)GetValue(CustomCSSProperty); }
-            set { SetValue(CustomCSSProperty, value); }
-        }
-
         public object ScriptingObject
         {
             get { return this.browser.ObjectForScripting; }
             set { this.browser.ObjectForScripting = value; }
         }
 
-
         private System.Windows.Forms.WebBrowser browser;
         private IHTMLStyleSheet styleSheet;
 
         public BetterBrowser()
         {
-            this.CustomCSS = new List<CustomCSSRule>();
-
             System.Windows.Forms.Integration.WindowsFormsHost host =
         new System.Windows.Forms.Integration.WindowsFormsHost();
 
@@ -119,18 +102,7 @@ namespace EmbeddedTerminal
         private void ThemeStyleSheet()
         {
             this.styleSheet.cssText = "";
-            // First we add the default rules
             this.styleSheet.addRule("body", CompileDefaultRules());
-
-            foreach (CustomCSSRule item in CustomCSS)
-            {
-                string declarationSegment = String.Empty;
-                foreach (CSSDeclaration declaration in item.Declarations)
-                {
-                    declarationSegment += declaration.ToString();
-                }
-                this.styleSheet.addRule(item.Selector, declarationSegment);
-            }
         }
 
         private string CompileDefaultRules()
@@ -142,75 +114,6 @@ namespace EmbeddedTerminal
             declarationSegment += "scrollbar-track-color: " + ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ScrollBarArrowBackgroundColorKey)) + ";";
             declarationSegment += "scrollbar-face-color: " + ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ScrollBarThumbBackgroundColorKey)) + ";";
             return declarationSegment;
-        }
-
-        
-    }
-
-    public class CustomCSSRule : DependencyObject
-    {
-        public string Selector
-        {
-            get;
-            set;
-        }
-
-        public static readonly DependencyProperty DeclarationsProperty = DependencyProperty.Register(
-      "Declarations", typeof(IList), typeof(CustomCSSRule), new PropertyMetadata(new List<CSSDeclaration>()));
-        public IList Declarations
-        {
-            get { return (IList)GetValue(DeclarationsProperty); }
-            set { SetValue(DeclarationsProperty, value); }
-        }
-
-        public CustomCSSRule()
-        {
-            this.Declarations = new List<CSSDeclaration>();
-        }
-    }
-
-    public class CSSDeclaration: DependencyObject
-    {
-        public CSSProperty Attribute
-        {
-            get;
-            set;
-        }
-
-        public ThemeResourceKey Value
-        {
-            get;
-            set;
-        }
-
-        public override string ToString()
-        {
-            var color = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(this.Value));
-            string property;
-            switch (this.Attribute)
-            {
-                case CSSProperty.Color:
-                    property = "color";
-                    break;
-                case CSSProperty.BackgroundColor:
-                    property = "background-color";
-                    break;
-                case CSSProperty.OutlineColor:
-                    property = "outline-color";
-                    break;
-                default:
-                    return "";
-            }
-
-            return property + ": " + color + ";";
-
-        }
-
-        public enum CSSProperty
-        {
-            Color,
-            BackgroundColor,
-            OutlineColor
         }
     }
 }
