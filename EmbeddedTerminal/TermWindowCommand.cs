@@ -3,6 +3,7 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Task = System.Threading.Tasks.Task;
 
 namespace EmbeddedTerminal
 {
@@ -24,29 +25,24 @@ namespace EmbeddedTerminal
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly AsyncPackage package;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private TermWindowCommand(Package package)
+        private TermWindowCommand(AsyncPackage package, IMenuCommandService commandService)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
             this.package = package;
-
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (commandService == null)
             {
-                var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
-                commandService.AddCommand(menuItem);
+                throw new ArgumentNullException(nameof(commandService));
             }
+
+            var menuCommandID = new CommandID(CommandSet, CommandId);
+            var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+            commandService.AddCommand(menuItem);
         }
 
         /// <summary>
@@ -59,23 +55,13 @@ namespace EmbeddedTerminal
         }
 
         /// <summary>
-        /// Gets the service provider from the owner package.
-        /// </summary>
-        private IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
-        }
-
-        /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(Package package)
+        public static async Task InitializeAsync(AsyncPackage package)
         {
-            Instance = new TermWindowCommand(package);
+            var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            Instance = new TermWindowCommand(package, commandService);
         }
 
         /// <summary>

@@ -179,7 +179,7 @@
             var lcinfo = this.ExtractLineColumnInfo(link);
 
 
-            VsShellUtilities.OpenDocument(TermWindowPackage.Instance, path, Guid.Empty, out _, out _, out _, out var textView);
+            VsShellUtilities.OpenDocument(ServiceProvider.GlobalProvider, path, Guid.Empty, out _, out _, out _, out var textView);
             if (textView != null)
             {
                 // Indexing in an IVsTextView is zero-based, whereas values returned from a build should be one-based.
