@@ -34,7 +34,7 @@ namespace EmbeddedTerminal
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(TermWindow), MultiInstances = true, Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
+    [ProvideToolWindow(typeof(TermWindow), Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
     [Guid(TermWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
@@ -54,7 +54,7 @@ namespace EmbeddedTerminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
-            await TermWindowCommand.InitializeAsync(this);
+            await TermWindowCommand.InitializeCommandAsync(this);
             TermWindowPackage.Instance = this;
         }
 
