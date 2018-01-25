@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
@@ -30,6 +31,13 @@ namespace EmbeddedTerminal
 
             var settingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
             this.EnsureCollection(settingsStore, forceWrite: false);
+
+            foreach (var property in GetOptionProperties())
+            {
+                var serializedProp = settingsStore.GetString(this.CollectionName, property.Name);
+                var value = Newtonsoft.Json.JsonConvert.DeserializeObject(serializedProp, property.PropertyType);
+                property.SetValue(this, value);
+            }
         }
 
         public async Task SaveDataAsync()
@@ -48,20 +56,22 @@ namespace EmbeddedTerminal
                 settingsStore.CreateCollection(this.CollectionName);
             }
 
-            var properties = this.GetType()
-                .GetProperties()
-                .Where(p => p.IsDefined(typeof(OptionItemAttribute), false))
-                .Where(p => p.PropertyType.IsSerializable)
-                .Select(p => new { p.Name, Value = p.GetValue(this)});
-
-            foreach (var property in properties)
+            foreach (var property in GetOptionProperties())
             {
                 if (forceWrite || !settingsStore.PropertyExists(this.CollectionName, property.Name))
                 {
-                    var output = Newtonsoft.Json.JsonConvert.SerializeObject(property.Value);
+                    var output = Newtonsoft.Json.JsonConvert.SerializeObject(property.GetValue(this));
                     settingsStore.SetString(this.CollectionName, property.Name, output);
                 }
             }
+        }
+
+        private IEnumerable<PropertyInfo> GetOptionProperties()
+        {
+            return this.GetType()
+                .GetProperties()
+                .Where(p => p.IsDefined(typeof(OptionItemAttribute), false))
+                .Where(p => p.PropertyType.IsSerializable);
         }
     }
 }
