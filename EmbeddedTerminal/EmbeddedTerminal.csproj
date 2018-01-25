@@ -139,7 +139,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*">
+    <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*" Exclude="node_modules\node-pty\build\Release\**\*.pdb">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="node_modules\vscode-jsonrpc\**\*">
