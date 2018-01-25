@@ -1,7 +1,7 @@
 image: Visual Studio 2017
 
 install:
-  - ps: Install-Product node 6 x86
+  - ps: Install-Product node 8 x86
 
 build_script:
   - nuget restore -Verbosity quiet
