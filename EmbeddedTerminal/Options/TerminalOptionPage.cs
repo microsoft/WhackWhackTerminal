@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,19 +17,20 @@ namespace EmbeddedTerminal
 
         public TerminalOptionPage()
         {
-            this.model = new TerminalOptionsModel(AsyncServiceProvider.GlobalProvider);
+            IVsSettingsManager settingsManager = (IVsSettingsManager)ServiceProvider.GlobalProvider.GetService(typeof(SVsSettingsManager));
+            this.model = new TerminalOptionsModel(settingsManager);
         }
 
         public override object AutomationObject => this.model;
 
         public override void LoadSettingsFromStorage()
         {
-            ThreadHelper.JoinableTaskFactory.Run(this.model.LoadDataAsync);
+            this.model.LoadData();
         }
 
         public override void SaveSettingsToStorage()
         {
-            ThreadHelper.JoinableTaskFactory.Run(this.model.SaveDataAsync);
+            this.model.SaveData();
         }
     }
 }

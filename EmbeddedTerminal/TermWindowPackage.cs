@@ -45,6 +45,7 @@ namespace EmbeddedTerminal
         /// </summary>
         public const string PackageGuidString = "35b633bd-cdfb-4eda-8c26-f557e419eb8a";
 
+        private IVsSettingsManager settingsManager;
         #region Package Members
 
         /// <summary> 
@@ -55,6 +56,7 @@ namespace EmbeddedTerminal
         {
             await base.InitializeAsync(cancellationToken, progress);
             await TermWindowCommand.InitializeCommandAsync(this);
+            this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
             TermWindowPackage.Instance = this;
         }
 
@@ -68,8 +70,7 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
-                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
                 return optionsModel.OptionTerminal;
             }
         }
@@ -78,8 +79,7 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
-                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
                 return optionsModel.CustomCSSPath;
             }
         }
@@ -88,8 +88,7 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
-                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
                 return optionsModel.StartupArgument;
             }
         }

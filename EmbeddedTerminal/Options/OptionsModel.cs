@@ -15,21 +15,19 @@ namespace EmbeddedTerminal
 {
     internal abstract class OptionsModel
     {
-        private readonly Microsoft.VisualStudio.Shell.IAsyncServiceProvider serviceProvider;
+        private readonly ShellSettingsManager settingsManager;
 
-        public OptionsModel(Microsoft.VisualStudio.Shell.IAsyncServiceProvider serviceProvider)
+        public OptionsModel(IVsSettingsManager settingsManager)
         {
-            this.serviceProvider = serviceProvider;
+            this.settingsManager = new ShellSettingsManager(settingsManager);
+            this.LoadData();
         }
 
         protected abstract string CollectionName { get; }
 
-        public async Task LoadDataAsync()
+        public void LoadData()
         {
-            IVsSettingsManager settingsManager = (IVsSettingsManager)await this.serviceProvider.GetServiceAsync(typeof(SVsSettingsManager));
-            ShellSettingsManager shellSettingsManager = new ShellSettingsManager(settingsManager);
-
-            var settingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            var settingsStore = this.settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
             this.EnsureCollection(settingsStore, forceWrite: false);
 
             foreach (var property in GetOptionProperties())
@@ -40,12 +38,9 @@ namespace EmbeddedTerminal
             }
         }
 
-        public async Task SaveDataAsync()
+        public void SaveData()
         {
-            IVsSettingsManager settingsManager = (IVsSettingsManager)await this.serviceProvider.GetServiceAsync(typeof(SVsSettingsManager));
-            ShellSettingsManager shellSettingsManager = new ShellSettingsManager(settingsManager);
-
-            var settingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            var settingsStore = this.settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
             this.EnsureCollection(settingsStore, forceWrite: true);
         }
 
