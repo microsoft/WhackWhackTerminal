@@ -68,8 +68,9 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
-                return page.OptionTerminal;
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
+                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                return optionsModel.OptionTerminal;
             }
         }
 
@@ -77,8 +78,9 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
-                return page.CustomCSSPath;
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
+                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                return optionsModel.CustomCSSPath;
             }
         }
 
@@ -86,8 +88,9 @@ namespace EmbeddedTerminal
         {
             get
             {
-                TerminalOptionPage page = (TerminalOptionPage)GetDialogPage(typeof(TerminalOptionPage));
-                return page.StartupArgument;
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this);
+                ThreadHelper.JoinableTaskFactory.Run(optionsModel.LoadDataAsync);
+                return optionsModel.StartupArgument;
             }
         }
 

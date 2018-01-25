@@ -56,8 +56,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BetterBrowser.cs" />
+    <Compile Include="Options\OptionItemAttribute.cs" />
+    <Compile Include="Options\OptionsModel.cs" />
+    <Compile Include="Options\TerminalOptionsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TerminalOptionPage.cs">
+    <Compile Include="Options\TerminalOptionPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TermWindow.cs" />
@@ -84,21 +87,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="node_modules\xterm\dist\addons\attach\attach.js" />
     <Content Include="node_modules\xterm\dist\addons\fit\fit.js">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="node_modules\xterm\dist\addons\fullscreen\fullscreen.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="node_modules\xterm\dist\addons\fullscreen\fullscreen.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="node_modules\xterm\dist\addons\linkify\linkify.js" />
-    <Content Include="node_modules\xterm\dist\addons\terminado\terminado.js" />
     <Content Include="node_modules\xterm\dist\xterm.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -107,89 +99,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="node_modules\xterm\gulpfile.js" />
-    <Content Include="node_modules\xterm\lib\addons\attach\attach.js" />
-    <Content Include="node_modules\xterm\lib\addons\fit\fit.js" />
-    <Content Include="node_modules\xterm\lib\addons\fullscreen\fullscreen.css" />
-    <Content Include="node_modules\xterm\lib\addons\fullscreen\fullscreen.js" />
-    <Content Include="node_modules\xterm\lib\addons\terminado\terminado.js" />
-    <Content Include="node_modules\xterm\lib\Charsets.js" />
-    <Content Include="node_modules\xterm\lib\CompositionHelper.js" />
-    <Content Include="node_modules\xterm\lib\CompositionHelper.test.js" />
-    <Content Include="node_modules\xterm\lib\EscapeSequences.js" />
-    <Content Include="node_modules\xterm\lib\EventEmitter.js" />
-    <Content Include="node_modules\xterm\lib\EventEmitter.test.js" />
-    <Content Include="node_modules\xterm\lib\handlers\Clipboard.js" />
-    <Content Include="node_modules\xterm\lib\handlers\Clipboard.test.js" />
-    <Content Include="node_modules\xterm\lib\InputHandler.js" />
-    <Content Include="node_modules\xterm\lib\InputHandler.test.js" />
-    <Content Include="node_modules\xterm\lib\Interfaces.js" />
-    <Content Include="node_modules\xterm\lib\Linkifier.js" />
-    <Content Include="node_modules\xterm\lib\Linkifier.test.js" />
-    <Content Include="node_modules\xterm\lib\Parser.js" />
-    <Content Include="node_modules\xterm\lib\Renderer.js" />
-    <Content Include="node_modules\xterm\lib\SelectionManager.js" />
-    <Content Include="node_modules\xterm\lib\SelectionManager.test.js" />
-    <Content Include="node_modules\xterm\lib\SelectionModel.js" />
-    <Content Include="node_modules\xterm\lib\SelectionModel.test.js" />
-    <Content Include="node_modules\xterm\lib\test\addons\test.js" />
-    <Content Include="node_modules\xterm\lib\test\escape-sequences-test.js" />
-    <Content Include="node_modules\xterm\lib\test\test.js" />
-    <Content Include="node_modules\xterm\lib\Types.js" />
-    <Content Include="node_modules\xterm\lib\utils\Browser.js" />
-    <Content Include="node_modules\xterm\lib\utils\CharMeasure.js" />
-    <Content Include="node_modules\xterm\lib\utils\CharMeasure.test.js" />
-    <Content Include="node_modules\xterm\lib\utils\CircularList.js" />
-    <Content Include="node_modules\xterm\lib\utils\CircularList.test.js" />
-    <Content Include="node_modules\xterm\lib\utils\DomElementObjectPool.js" />
-    <Content Include="node_modules\xterm\lib\utils\DomElementObjectPool.test.js" />
-    <Content Include="node_modules\xterm\lib\utils\Generic.js" />
-    <Content Include="node_modules\xterm\lib\utils\Mouse.js" />
-    <Content Include="node_modules\xterm\lib\Viewport.js" />
-    <Content Include="node_modules\xterm\lib\Viewport.test.js" />
-    <Content Include="node_modules\xterm\lib\xterm.css" />
-    <Content Include="node_modules\xterm\lib\xterm.js" />
-    <Content Include="node_modules\xterm\src\addons\attach\attach.js" />
-    <Content Include="node_modules\xterm\src\addons\fit\fit.js" />
-    <Content Include="node_modules\xterm\src\addons\fullscreen\fullscreen.css" />
-    <Content Include="node_modules\xterm\src\addons\fullscreen\fullscreen.js" />
-    <Content Include="node_modules\xterm\src\addons\terminado\terminado.js" />
-    <Content Include="node_modules\xterm\src\Charsets.ts" />
-    <Content Include="node_modules\xterm\src\CompositionHelper.test.ts" />
-    <Content Include="node_modules\xterm\src\CompositionHelper.ts" />
-    <Content Include="node_modules\xterm\src\EscapeSequences.ts" />
-    <Content Include="node_modules\xterm\src\EventEmitter.test.ts" />
-    <Content Include="node_modules\xterm\src\EventEmitter.ts" />
-    <Content Include="node_modules\xterm\src\handlers\Clipboard.test.ts" />
-    <Content Include="node_modules\xterm\src\handlers\Clipboard.ts" />
-    <Content Include="node_modules\xterm\src\InputHandler.test.ts" />
-    <Content Include="node_modules\xterm\src\InputHandler.ts" />
-    <Content Include="node_modules\xterm\src\Interfaces.ts" />
-    <Content Include="node_modules\xterm\src\Linkifier.test.ts" />
-    <Content Include="node_modules\xterm\src\Linkifier.ts" />
-    <Content Include="node_modules\xterm\src\Parser.ts" />
-    <Content Include="node_modules\xterm\src\Renderer.ts" />
-    <Content Include="node_modules\xterm\src\SelectionManager.test.ts" />
-    <Content Include="node_modules\xterm\src\SelectionManager.ts" />
-    <Content Include="node_modules\xterm\src\SelectionModel.test.ts" />
-    <Content Include="node_modules\xterm\src\SelectionModel.ts" />
-    <Content Include="node_modules\xterm\src\test\addons\test.js" />
-    <Content Include="node_modules\xterm\src\test\escape-sequences-test.js" />
-    <Content Include="node_modules\xterm\src\test\test.js" />
-    <Content Include="node_modules\xterm\src\Types.ts" />
-    <Content Include="node_modules\xterm\src\utils\Browser.ts" />
-    <Content Include="node_modules\xterm\src\utils\CharMeasure.test.ts" />
-    <Content Include="node_modules\xterm\src\utils\CharMeasure.ts" />
-    <Content Include="node_modules\xterm\src\utils\CircularList.test.ts" />
-    <Content Include="node_modules\xterm\src\utils\CircularList.ts" />
-    <Content Include="node_modules\xterm\src\utils\DomElementObjectPool.test.ts" />
-    <Content Include="node_modules\xterm\src\utils\DomElementObjectPool.ts" />
-    <Content Include="node_modules\xterm\src\utils\Generic.ts" />
-    <Content Include="node_modules\xterm\src\utils\Mouse.ts" />
-    <Content Include="node_modules\xterm\src\Viewport.test.ts" />
-    <Content Include="node_modules\xterm\src\Viewport.ts" />
-    <Content Include="node_modules\xterm\src\xterm.css" />
-    <Content Include="node_modules\xterm\src\xterm.js" />
     <Content Include="view\linkMatcher.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -202,62 +111,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="node_modules\xterm\bower.json" />
-    <None Include="node_modules\xterm\dist\addons\attach\package.json" />
-    <None Include="node_modules\xterm\dist\addons\fit\package.json" />
-    <None Include="node_modules\xterm\dist\addons\fullscreen\package.json" />
-    <None Include="node_modules\xterm\dist\addons\terminado\package.json" />
-    <None Include="node_modules\xterm\dist\xterm.js.map" />
-    <None Include="node_modules\xterm\jsdoc.json" />
-    <None Include="node_modules\xterm\lib\addons\attach\package.json" />
-    <None Include="node_modules\xterm\lib\addons\fit\package.json" />
-    <None Include="node_modules\xterm\lib\addons\fullscreen\package.json" />
-    <None Include="node_modules\xterm\lib\addons\terminado\package.json" />
-    <None Include="node_modules\xterm\lib\Charsets.js.map" />
-    <None Include="node_modules\xterm\lib\CompositionHelper.js.map" />
-    <None Include="node_modules\xterm\lib\CompositionHelper.test.js.map" />
-    <None Include="node_modules\xterm\lib\EscapeSequences.js.map" />
-    <None Include="node_modules\xterm\lib\EventEmitter.js.map" />
-    <None Include="node_modules\xterm\lib\EventEmitter.test.js.map" />
-    <None Include="node_modules\xterm\lib\handlers\Clipboard.js.map" />
-    <None Include="node_modules\xterm\lib\handlers\Clipboard.test.js.map" />
-    <None Include="node_modules\xterm\lib\InputHandler.js.map" />
-    <None Include="node_modules\xterm\lib\InputHandler.test.js.map" />
-    <None Include="node_modules\xterm\lib\Interfaces.js.map" />
-    <None Include="node_modules\xterm\lib\Linkifier.js.map" />
-    <None Include="node_modules\xterm\lib\Linkifier.test.js.map" />
-    <None Include="node_modules\xterm\lib\Parser.js.map" />
-    <None Include="node_modules\xterm\lib\Renderer.js.map" />
-    <None Include="node_modules\xterm\lib\SelectionManager.js.map" />
-    <None Include="node_modules\xterm\lib\SelectionManager.test.js.map" />
-    <None Include="node_modules\xterm\lib\SelectionModel.js.map" />
-    <None Include="node_modules\xterm\lib\SelectionModel.test.js.map" />
-    <None Include="node_modules\xterm\lib\test\addons\test.js.map" />
-    <None Include="node_modules\xterm\lib\test\escape-sequences-test.js.map" />
-    <None Include="node_modules\xterm\lib\test\test.js.map" />
-    <None Include="node_modules\xterm\lib\Types.js.map" />
-    <None Include="node_modules\xterm\lib\utils\Browser.js.map" />
-    <None Include="node_modules\xterm\lib\utils\CharMeasure.js.map" />
-    <None Include="node_modules\xterm\lib\utils\CharMeasure.test.js.map" />
-    <None Include="node_modules\xterm\lib\utils\CircularList.js.map" />
-    <None Include="node_modules\xterm\lib\utils\CircularList.test.js.map" />
-    <None Include="node_modules\xterm\lib\utils\DomElementObjectPool.js.map" />
-    <None Include="node_modules\xterm\lib\utils\DomElementObjectPool.test.js.map" />
-    <None Include="node_modules\xterm\lib\utils\Generic.js.map" />
-    <None Include="node_modules\xterm\lib\utils\Mouse.js.map" />
-    <None Include="node_modules\xterm\lib\Viewport.js.map" />
-    <None Include="node_modules\xterm\lib\Viewport.test.js.map" />
-    <None Include="node_modules\xterm\lib\xterm.js.map" />
-    <None Include="node_modules\xterm\LICENSE" />
-    <None Include="node_modules\xterm\package.json" />
-    <None Include="node_modules\xterm\README.md" />
-    <None Include="node_modules\xterm\src\addons\attach\package.json" />
-    <None Include="node_modules\xterm\src\addons\fit\package.json" />
-    <None Include="node_modules\xterm\src\addons\fullscreen\package.json" />
-    <None Include="node_modules\xterm\src\addons\terminado\package.json" />
-    <None Include="node_modules\xterm\tsconfig.json" />
-    <None Include="node_modules\xterm\tslint.json" />
-    <None Include="node_modules\xterm\typings.json" />
     <None Include="package-lock.json" />
     <None Include="package.json" />
     <None Include="packages.config">
@@ -286,9 +139,6 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <!-- <Content Include="node_modules\node-pty\**\*" Exclude="node_modules\node-pty\build\deps\**\*;node_modules\node-pty\deps\**\*;node_modules\node-pty\src\**\*">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>  -->
     <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -338,6 +188,11 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.15.5.27130\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.14.3.25407\lib\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6071\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
       <Private>True</Private>
@@ -369,6 +224,11 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.12.0.12.0.30110\lib\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime.14.3.25407\lib\Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime.15.0.26929\lib\net20\Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime.dll</HintPath>
@@ -390,8 +250,8 @@
       <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.8.0.8.0.50728\lib\net11\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.3.20\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.5.24\lib\net46\Microsoft.VisualStudio.Threading.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Utilities, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Utilities.15.5.27130\lib\net46\Microsoft.VisualStudio.Utilities.dll</HintPath>
