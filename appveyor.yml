@@ -9,3 +9,7 @@ build_script:
   - npm install
   - cd ..
   - msbuild .\EmbeddedTerminal\EmbeddedTerminal.csproj /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+
+artifacts:
+  - path: '**\*.vsix'
+    name: WhackWhackTerminal
