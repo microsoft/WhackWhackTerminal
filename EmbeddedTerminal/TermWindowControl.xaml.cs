@@ -16,14 +16,16 @@
     using System.Security.Permissions;
     using System.Windows.Threading;
     using System.Text.RegularExpressions;
+    using Microsoft.VisualStudio.ComponentModelHost;
 
     /// <summary>
     /// Interaction logic for TermWindowControl.
     /// </summary>
     public partial class TermWindowControl : UserControl, IDisposable
     {
-        public TermWindow window;
+        internal readonly TermWindow window;
 
+        internal readonly SolutionUtils solutionUtils;
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
@@ -34,6 +36,9 @@
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
             this.window = window;
+
+            var solutionService = ThreadHelper.JoinableTaskFactory.Run(async () => (IVsSolution)await TermWindowPackage.Instance.GetServiceAsync(typeof(SVsSolution)));
+            this.solutionUtils = new SolutionUtils(solutionService);
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;
@@ -107,8 +112,7 @@
 
         public string GetSolutionDir()
         {
-            IVsSolution solutionService = (IVsSolution)Package.GetGlobalService(typeof(SVsSolution));
-            solutionService.GetSolutionInfo(out string solutionDir, out _, out _);
+            var solutionDir = this.uiControl.solutionUtils.GetSolutionDir();
             if (solutionDir == null)
             {
                 solutionDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

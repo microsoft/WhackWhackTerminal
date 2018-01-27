@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="WhackWhackTerminal.6f6b45b8-e50b-4d45-87f0-c304abf8ff0f" Version="0.2.9" Language="en-US" Publisher="Daniel Griffen" />
+        <Identity Id="WhackWhackTerminal.6f6b45b8-e50b-4d45-87f0-c304abf8ff0f" Version="0.3.0" Language="en-US" Publisher="Daniel Griffen" />
         <DisplayName>Whack Whack Terminal</DisplayName>
         <Description xml:space="preserve">Terminal emulator for Visual Studio. Allows you to run command prompt, powershell, WSL bash. All including interactive mode.</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=DanielGriffen.WhackWhackTerminal</MoreInfo>

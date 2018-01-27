@@ -63,6 +63,7 @@
     <Compile Include="Options\TerminalOptionPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SolutionUtils.cs" />
     <Compile Include="TermWindow.cs" />
     <Compile Include="TermWindowCommand.cs" />
     <Compile Include="TermWindowControl.xaml.cs">
