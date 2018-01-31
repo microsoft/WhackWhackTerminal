@@ -17,25 +17,23 @@
     using System.Windows.Threading;
     using System.Text.RegularExpressions;
     using Microsoft.VisualStudio.ComponentModelHost;
+    using Task = System.Threading.Tasks.Task;
 
     /// <summary>
     /// Interaction logic for TermWindowControl.
     /// </summary>
     public partial class TermWindowControl : UserControl, IDisposable
     {
-        internal readonly TermWindow window;
-
         internal readonly SolutionUtils solutionUtils;
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
-        public TermWindowControl(TermWindow window)
+        public TermWindowControl()
         {
             this.InitializeComponent();
 
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
-            this.window = window;
 
             var solutionService = ThreadHelper.JoinableTaskFactory.Run(async () => (IVsSolution)await TermWindowPackage.Instance.GetServiceAsync(typeof(SVsSolution)));
             this.solutionUtils = new SolutionUtils(solutionService);
@@ -152,20 +150,27 @@
             rpc.InvokeAsync("closeTerm");
         }
 
-        public void PtyData(string data)
+        public async Task PtyData(string data)
         {
-            ui.InvokeAsync(() =>
-            {
-                this.uiControl.terminalView.Invoke("invokeTerm", "ptyData", data);
-            });
+            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+            this.uiControl.terminalView.Invoke("invokeTerm", "ptyData", data);
         }
 
-        public void PtyExit(int? code)
+        public async Task PtyExit(int? code)
         {
-            if (this.uiControl.window.Frame is IVsWindowFrame windowFrame)
+            string restartMessage;
+            if (code.HasValue)
             {
-                windowFrame?.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+                restartMessage = $"terminal exited with code {code.Value}, restarting";
             }
+            else
+            {
+                restartMessage = $"terminal exited, restarting";
+            }
+
+            await this.PtyData(restartMessage);
+            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+            this.uiControl.terminalView.Invoke("invokeTerm", "initTerm");
         }
         #endregion
 

@@ -52,7 +52,10 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
     });
 
     this.ptyConnection.on('data', (data) => this.connection.sendRequest('PtyData', [data]));
-    this.ptyConnection.on('exit', (code) => this.connection.sendRequest('PtyExit', [code]));
+    this.ptyConnection.on('exit', (code) => {
+        this.connection.sendRequest('PtyExit', [code]);
+        this.closeTerm();
+    });
 }
 
 ServicePty.prototype.termData = function (data) {
@@ -70,6 +73,8 @@ ServicePty.prototype.resizeTerm = function (cols, rows) {
 ServicePty.prototype.closeTerm = function () {
     if (this.ptyConnection != null) {
         this.ptyConnection.destroy();
+        this.ptyConnection.removeAllListeners('exit');
+        this.ptyConnection = null;
     }
 }
 
