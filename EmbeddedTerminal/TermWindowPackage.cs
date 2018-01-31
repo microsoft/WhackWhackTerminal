@@ -55,8 +55,10 @@ namespace EmbeddedTerminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
-            await TermWindowCommand.InitializeCommandAsync(this);
             this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
+
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await TermWindowCommand.InitializeCommandAsync(this);
             TermWindowPackage.Instance = this;
         }
 
