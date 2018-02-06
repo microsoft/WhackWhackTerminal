@@ -24,19 +24,20 @@
     public partial class TermWindowControl : UserControl, IDisposable
     {
         internal readonly TermWindow window;
-
+        private readonly ITerminalBackend backend;
         internal readonly SolutionUtils solutionUtils;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
-        public TermWindowControl(TermWindow window)
+        public TermWindowControl(TermWindow window, ITerminalBackend backend)
         {
             this.InitializeComponent();
 
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
             this.window = window;
-
+            this.backend = backend;
             var solutionService = ThreadHelper.JoinableTaskFactory.Run(async () => (IVsSolution)await TermWindowPackage.Instance.GetServiceAsync(typeof(SVsSolution)));
             this.solutionUtils = new SolutionUtils(solutionService);
 

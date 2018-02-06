@@ -56,6 +56,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BetterBrowser.cs" />
+    <Compile Include="ITerminalBackend.cs" />
+    <Compile Include="NodePtyBackend.cs" />
     <Compile Include="Options\OptionItemAttribute.cs" />
     <Compile Include="Options\OptionsModel.cs" />
     <Compile Include="Options\TerminalOptionsModel.cs" />
@@ -70,21 +72,23 @@
       <DependentUpon>TermWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TermWindowPackage.cs" />
+    <Compile Include="VSService\ITerminalWindow.cs" />
+    <Compile Include="VSService\STerminalWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BrandWhackWhackTerminal_256x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="view\custom.css">
+    <Content Include="WebView\custom.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="view\default.css">
+    <Content Include="WebView\default.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="service\pty.js">
+    <Content Include="ServiceHub\pty.js">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -100,7 +104,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="view\linkMatcher.js">
+    <Content Include="WebView\linkMatcher.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -108,7 +112,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Key.snk" />
-    <Content Include="service\wwt.pty.servicehub.service.json">
+    <Content Include="ServiceHub\wwt.pty.servicehub.service.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -122,11 +126,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="view\default.html">
+    <Content Include="WebView\default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="view\default.js">
+    <Content Include="WebView\default.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
