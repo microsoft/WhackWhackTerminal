@@ -97,6 +97,15 @@ namespace EmbeddedTerminal
             }
         }
 
+        public bool OptionChangeDirectory
+        {
+            get
+            {
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
+                return optionsModel.ChangeDirectory;
+            }
+        }
+
         #endregion
     }
 }

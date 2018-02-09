@@ -33,6 +33,11 @@ namespace EmbeddedTerminal
         [DisplayName("Startup Argument")]
         [OptionItem]
         public string StartupArgument { get; set; } = string.Empty;
+
+        [Category("Whack Whack Terminal")]
+        [DisplayName("Change Working Directory on Solution Load")]
+        [OptionItem]
+        public bool ChangeDirectory { get; set; } = true;
     }
 
     public enum DefaultTerminal

@@ -118,10 +118,13 @@
 
         private async void SolutionUtils_SolutionChanged(string obj)
         {
-            this.CloseTerm();
-            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await this.PtyData("Restarting terminal and changing to new solution directory\r\n");
-            this.uiControl.terminalView.Invoke("invokeTerm", "initTerm");
+            if (TermWindowPackage.Instance.OptionChangeDirectory)
+            {
+                this.CloseTerm();
+                await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await this.PtyData("Restarting terminal and changing to new solution directory\r\n");
+                this.uiControl.terminalView.Invoke("invokeTerm", "initTerm");
+            }
         }
 
         public string GetSolutionDir()
