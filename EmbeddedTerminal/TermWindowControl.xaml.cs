@@ -18,6 +18,8 @@
     using System.Text.RegularExpressions;
     using Microsoft.VisualStudio.ComponentModelHost;
     using Task = System.Threading.Tasks.Task;
+    using Microsoft.VisualStudio.Workspace.VSIntegration;
+    using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 
     /// <summary>
     /// Interaction logic for TermWindowControl.
@@ -38,7 +40,9 @@
             this.GotFocus += TermWindowControl_GotFocus;
             this.backend = backend;
             var solutionService = ThreadHelper.JoinableTaskFactory.Run(async () => (IVsSolution)await TermWindowPackage.Instance.GetServiceAsync(typeof(SVsSolution)));
-            this.solutionUtils = new SolutionUtils(solutionService);
+            var componentModel = ThreadHelper.JoinableTaskFactory.Run(async () => (IComponentModel)await TermWindowPackage.Instance.GetServiceAsync(typeof(SComponentModel)));
+            var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
+            this.solutionUtils = new SolutionUtils(solutionService, workspaceService);
 
             var client = new HubClient();
             var clientStream = client.RequestServiceAsync("wwt.pty").Result;

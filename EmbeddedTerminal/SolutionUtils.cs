@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Workspace;
+using Microsoft.VisualStudio.Workspace.VSIntegration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,14 @@ namespace EmbeddedTerminal
     internal class SolutionUtils
     {
         private readonly IVsSolution solutionService;
+        private readonly IVsWorkspaceFactory workspaceService;
         private readonly Dictionary<Action<string>, uint> cookieMap = new Dictionary<Action<string>, uint>();
+        private readonly Dictionary<Action<string>, Func<object, EventArgs, Task>> lambdaMap = new Dictionary<Action<string>, Func<object, EventArgs, Task>>();
 
-        public SolutionUtils(IVsSolution solutionService)
+        public SolutionUtils(IVsSolution solutionService, IVsWorkspaceFactory workspaceService)
         {
             this.solutionService = solutionService;
+            this.workspaceService = workspaceService;
         }
 
         public string GetSolutionDir()
@@ -32,12 +37,26 @@ namespace EmbeddedTerminal
             {
                 this.solutionService.AdviseSolutionEvents(new SolutionEvents(this.solutionService, value), out var cookie);
 
+                Func<object, EventArgs, Task> adapterLambda = (sender, _) => 
+                {
+                    var thing = sender as IVsWorkspaceFactory;
+                    if (thing?.CurrentWorkspace?.Location != null)
+                    {
+                        value(thing?.CurrentWorkspace.Location);
+                    }
+
+                    return Task.CompletedTask;
+                };
+
+                this.workspaceService.OnActiveWorkspaceChanged += adapterLambda;
+                lambdaMap[value] = adapterLambda;
                 cookieMap[value] = cookie;
             }
             remove
             {
                 this.solutionService.UnadviseSolutionEvents(cookieMap[value]);
                 cookieMap.Remove(value);
+                lambdaMap.Remove(value);
             }
         }
 
@@ -54,8 +73,6 @@ namespace EmbeddedTerminal
 
             public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
             {
-                this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
-                this.handler(solutionDir);
                 return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
@@ -86,6 +103,8 @@ namespace EmbeddedTerminal
 
             public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
             {
+                this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
+                this.handler(solutionDir);
                 return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
