@@ -4,6 +4,7 @@ function TermView() {
     this.resizeTimeout = null;
     fit.apply(Terminal);
     this.term = new Terminal({
+        fontFamily: 'Fira Code, Consolas, courier-new, courier, monospace',
         cursorBlink: true,
         cols: 80,
         rows: 24,
