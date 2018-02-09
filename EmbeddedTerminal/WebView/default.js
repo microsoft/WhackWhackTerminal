@@ -6,7 +6,8 @@ function TermView() {
     this.term = new Terminal({
         cursorBlink: true,
         cols: 80,
-        rows: 24
+        rows: 24,
+        theme: this.getTheme()
     });
     this.term.open(document.getElementById('content'));
     this.term.fit();
@@ -20,6 +21,15 @@ function TermView() {
 
 TermView.prototype.solutionDir = function () {
     return window.external.GetSolutionDir();
+}
+
+TermView.prototype.getTheme = function () {
+    return JSON.parse(window.external.GetTheme());
+}
+
+TermView.prototype.setTheme = function (theme) {
+    var themeObject = JSON.parse(theme);
+    this.term.setOption('theme', themeObject);
 }
 
 TermView.prototype.copyString = function (stringToCopy) {
