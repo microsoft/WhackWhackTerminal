@@ -52,58 +52,56 @@ namespace EmbeddedTerminal
                 this.handler = handler;
             }
 
-            public uint Cookie { get; set; }
-
             public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
             {
                 this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
                 this.handler(solutionDir);
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnBeforeUnloadProject(IVsHierarchy pRealHierarchy, IVsHierarchy pStubHierarchy)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnBeforeCloseSolution(object pUnkReserved)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
             public int OnAfterCloseSolution(object pUnkReserved)
             {
-                return 0;
+                return Microsoft.VisualStudio.VSConstants.S_OK;
             }
         }
     }

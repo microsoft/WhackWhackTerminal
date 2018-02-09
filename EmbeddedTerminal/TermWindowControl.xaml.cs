@@ -46,7 +46,7 @@
             var helper = new ScriptHelper(this, clientStream, Dispatcher.CurrentDispatcher);
             this.terminalView.ScriptingObject = helper;
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string rootPath = Path.Combine(extensionDirectory, "view\\default.html").Replace("\\\\", "\\");
+            string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
 
             this.terminalView.Navigate(new Uri(rootPath));
         }
@@ -108,6 +108,16 @@
             this.rpc = JsonRpc.Attach(serviceStream, this);
             this.uiControl = uiControl;
             this.ui = ui;
+
+            this.uiControl.solutionUtils.SolutionChanged += SolutionUtils_SolutionChanged;
+        }
+
+        private async void SolutionUtils_SolutionChanged(string obj)
+        {
+            this.CloseTerm();
+            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await this.PtyData("Restarting terminal and changing to new solution directory\r\n");
+            this.uiControl.terminalView.Invoke("invokeTerm", "initTerm");
         }
 
         public string GetSolutionDir()
@@ -163,11 +173,11 @@
             string restartMessage;
             if (code.HasValue)
             {
-                restartMessage = $"terminal exited with code {code.Value}, restarting";
+                restartMessage = $"terminal exited with code {code.Value}, restarting\r\n";
             }
             else
             {
-                restartMessage = $"terminal exited, restarting";
+                restartMessage = $"terminal exited, restarting\r\n";
             }
 
             await this.PtyData(restartMessage);
