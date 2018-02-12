@@ -95,7 +95,6 @@ namespace EmbeddedTerminal
             var doc = (IHTMLDocument2)browser.Document.DomDocument;
 
             this.styleSheet = doc.createStyleSheet("themesheet.css");
-            doc.createStyleSheet(TermWindowPackage.Instance?.OptionCustomCSSPath??"");
             this.ThemeStyleSheet();
         }
 

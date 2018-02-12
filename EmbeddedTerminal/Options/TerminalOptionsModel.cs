@@ -25,9 +25,14 @@ namespace EmbeddedTerminal
         public DefaultTerminal OptionTerminal { get; set; } = DefaultTerminal.Powershell;
 
         [Category("Whack Whack Terminal")]
-        [DisplayName("Custom CSS File")]
+        [DisplayName("Font Family")]
         [OptionItem]
-        public string CustomCSSPath { get; set; } = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "view\\custom.css").Replace("\\\\", "\\");
+        public string FontFamily { get; set; } = "Consolas";
+
+        [Category("Whack Whack Terminal")]
+        [DisplayName("Font Size")]
+        [OptionItem]
+        public int FontSize { get; set; } = 12;
 
         [Category("Whack Whack Terminal")]
         [DisplayName("Startup Argument")]

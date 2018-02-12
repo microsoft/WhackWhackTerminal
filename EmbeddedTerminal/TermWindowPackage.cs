@@ -79,15 +79,6 @@ namespace EmbeddedTerminal
             }
         }
 
-        public string OptionCustomCSSPath
-        {
-            get
-            {
-                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
-                return optionsModel.CustomCSSPath;
-            }
-        }
-
         public string OptionStartupArgument
         {
             get
@@ -103,6 +94,24 @@ namespace EmbeddedTerminal
             {
                 TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
                 return optionsModel.ChangeDirectory;
+            }
+        }
+
+        public string OptionFontFamily
+        {
+            get
+            {
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
+                return optionsModel.FontFamily;
+            }
+        }
+
+        public int OptionFontSize
+        {
+            get
+            {
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
+                return optionsModel.FontSize;
             }
         }
 

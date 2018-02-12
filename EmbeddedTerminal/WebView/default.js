@@ -4,7 +4,8 @@ function TermView() {
     this.resizeTimeout = null;
     fit.apply(Terminal);
     this.term = new Terminal({
-        fontFamily: 'Fira Code, Consolas, courier-new, courier, monospace',
+        fontFamily: this.getFontFamily() + ', courier-new, courier, monospace',
+        fontSize: this.getFontSize(),
         cursorBlink: true,
         cols: 80,
         rows: 24,
@@ -33,6 +34,13 @@ TermView.prototype.setTheme = function (theme) {
     this.term.setOption('theme', themeObject);
 }
 
+TermView.prototype.getFontSize = function () {
+    return window.external.GetFontSize();
+}
+
+TermView.prototype.getFontFamily = function () {
+    return window.external.GetFontFamily();
+}
 TermView.prototype.copyString = function (stringToCopy) {
     window.external.CopyStringToClipboard(stringToCopy);
 }

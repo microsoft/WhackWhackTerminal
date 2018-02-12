@@ -209,6 +209,16 @@
             return JsonConvert.SerializeObject(theme);
         }
 
+        public string GetFontFamily()
+        {
+            return TermWindowPackage.Instance.OptionFontFamily;
+        }
+
+        public int GetFontSize()
+        {
+            return TermWindowPackage.Instance.OptionFontSize;
+        }
+
         public void CopyStringToClipboard(string stringToCopy)
         {
             stringToCopy = stringToCopy == null ? "" : stringToCopy;

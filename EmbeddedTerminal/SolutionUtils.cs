@@ -28,6 +28,12 @@ namespace EmbeddedTerminal
         {
             this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
 
+            // solution may sometimes be null in an open folder scenario.
+            if (solutionDir == null)
+            {
+                return this.workspaceService.CurrentWorkspace?.Location;
+            }
+
             return solutionDir;
         }
 
