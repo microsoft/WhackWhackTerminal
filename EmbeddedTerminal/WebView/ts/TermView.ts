@@ -1,12 +1,18 @@
-﻿import { Terminal, ITheme } from 'xterm';
+﻿import { ITheme, Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit';
 import { VisualStudio } from './VsEventManager';
+
+// This import and declaraion are necessary due to a strange issue with the way the xterm.js dist file is bundled.
+// The definition file would make it seem that the xterm import contains the Terminal object, but at runtime it
+// actually is the terminal object.
+import * as xterm from 'xterm';
+const TerminalConstructor = xterm as any as (typeof Terminal);
 
 export class TermView {
     term: Terminal;
     resizeTimeout: number | null;
     constructor(fontFamily: string, fontSize: number, solutionDirectory: string) {
-        this.term = new Terminal({
+        this.term = new TerminalConstructor({
             fontFamily: fontFamily + ', courier-new, courier, monospace',
             fontSize: fontSize,
             cols: 80,
