@@ -360,7 +360,7 @@
       <Content Include="node_modules\xterm\dist\xterm.js">
         <IncludeInVSIX>true</IncludeInVSIX>
       </Content>
-      <Content Include="node_modules\requirejs\require.js">
+      <Content Include="node_modules\systemjs\dist\system.js">
         <IncludeInVSIX>true</IncludeInVSIX>
       </Content>
     </ItemGroup>

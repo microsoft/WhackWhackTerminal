@@ -12,8 +12,11 @@
     }
 
     export class Events {
-        static handlers: { [event: string]: { (data: any): void }[] };
+        static handlers: { [event: string]: { (data: any): void }[] } = {};
         static on(event: EventType, handler: { (data: any): void }) {
+            if (Events.handlers[event as string] === undefined) {
+                Events.handlers[event as string] = new Array();
+            }
             Events.handlers[event as string].push(handler);
         }
 

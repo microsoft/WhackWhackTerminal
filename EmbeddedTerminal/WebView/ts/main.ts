@@ -7,6 +7,10 @@ window.triggerEvent = (event, data) => {
     }
 };
 
-document.addEventListener("DOMContentLoaded", function (event) {
+if (document.readyState === 'complete') {
     let termView = new TermView('Fira Code', 14, 'C:\\');
-});
+} else {
+    document.addEventListener("DOMContentLoaded", function (event) {
+        let termView = new TermView('Fira Code', 14, 'C:\\');
+    });
+}
