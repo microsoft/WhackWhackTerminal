@@ -117,18 +117,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="node_modules\xterm\dist\addons\fit\fit.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="node_modules\xterm\dist\xterm.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="node_modules\xterm\dist\xterm.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="WebView\linkMatcher.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -167,14 +155,6 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*" Exclude="node_modules\node-pty\build\Release\**\*.pdb">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="node_modules\vscode-jsonrpc\**\*">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Page Include="TermWindowControl.xaml">
@@ -364,6 +344,24 @@
       <Content Include="@(GeneratedJavascript)">
         <IncludeInVSIX>true</IncludeInVSIX>
         <VSIXSubPath>WebView</VSIXSubPath>
+      </Content>
+      <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*" Exclude="node_modules\node-pty\build\Release\**\*.pdb">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\vscode-jsonrpc\**\*">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\addons\fit\fit.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\xterm.css">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\xterm.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\requirejs\require.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
       </Content>
     </ItemGroup>
   </Target>
