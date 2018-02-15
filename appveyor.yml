@@ -2,6 +2,10 @@ image: Visual Studio 2017
 
 install:
   - ps: Install-Product node 8 x86
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+
+before_build:
+  - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
 
 build_script:
   - nuget restore -Verbosity quiet
