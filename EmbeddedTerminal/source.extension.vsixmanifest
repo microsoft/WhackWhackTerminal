@@ -5,7 +5,7 @@
         <DisplayName>Whack Whack Terminal</DisplayName>
         <Description xml:space="preserve">Terminal emulator for Visual Studio. Allows you to run command prompt, powershell, WSL bash. All including interactive mode.</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=DanielGriffen.WhackWhackTerminal</MoreInfo>
-        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
+        <ReleaseNotes>https://github.com/Microsoft/WhackWhackTerminal/blob/master/CHANGELOG.md</ReleaseNotes>
         <Icon>BrandWhackWhackTerminal_256x.png</Icon>
         <Tags>terminal,git,bash,cmd,command prompt,powershell,shell</Tags>
     </Metadata>
