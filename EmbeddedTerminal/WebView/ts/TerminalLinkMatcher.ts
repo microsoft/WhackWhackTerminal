@@ -18,7 +18,7 @@ function validateLocalLink(uri: string, callback: { (isValid: boolean): void }) 
     }
 }
 
-function registerLocalLinkHandler(terminal: Terminal) {
+export function registerLocalLinkHandler(terminal: Terminal) {
     let regex = new RegExp(window.external.GetLinkRegex());
 
     terminal.registerLinkMatcher(regex, handleLocalLink, {

@@ -1,6 +1,7 @@
 ﻿import { ITheme, Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit';
 import { VisualStudio } from './VsEventManager';
+import { registerLocalLinkHandler } from './TerminalLinkMatcher';
 
 // This import and declaraion are necessary due to a strange issue with the way the xterm.js dist file is bundled.
 // The definition file would make it seem that the xterm import contains the Terminal object, but at runtime it
@@ -32,6 +33,9 @@ export class TermView {
             this.initPty(data)
         });
         window.addEventListener("resize", () => this.resizeHandler())
+        this.registerKeyboardHandlers();
+        this.initPty(solutionDirectory);
+        registerLocalLinkHandler(this.term);
     }
 
     private initPty(cwd: string) {
@@ -46,15 +50,15 @@ export class TermView {
         window.external.TermData(data);
     }
 
-    ptyData(data: string) {
+    private ptyData(data: string) {
         this.term.write(data);
     }
 
-    setTheme(theme: ITheme) {
+    private setTheme(theme: ITheme) {
         this.term.setOption('theme', theme);
     }
 
-    resizeHandler() {
+    private resizeHandler() {
         let actualHandler = () => {
             fit(this.term);
             window.external.ResizePty(this.term.cols, this.term.rows);
@@ -68,5 +72,29 @@ export class TermView {
         if (!this.resizeTimeout) {
             this.resizeTimeout = setTimeout(() => timeoutCallback(), 66);
         }
+    }
+
+    private registerKeyboardHandlers() {
+        this.term.attachCustomKeyEventHandler((event) => {
+            // capture Ctrl+C
+            if (event.ctrlKey && event.keyCode === 67 && this.term.hasSelection()) {
+                window.external.CopyStringToClipboard(this.term.getSelection());
+                this.term.clearSelection();
+                return false;
+            // capture Ctrl+V
+            } else if (event.ctrlKey && event.keyCode === 86) {
+                return false;
+            }
+        });
+
+        window.addEventListener('contextmenu', (event) => {
+            if (this.term.hasSelection()) {
+                window.external.CopyStringToClipboard(this.term.getSelection());
+                this.term.clearSelection();
+            } else {
+                let content = window.external.GetClipboard();
+                this.termData(content);
+            }
+        });
     }
 }
