@@ -10,10 +10,13 @@ import * as xterm from 'xterm';
 const TerminalConstructor = xterm as any as (typeof Terminal);
 
 export class TermView {
-    term: Terminal;
-    resizeTimeout: number | null;
-    constructor(fontFamily: string, fontSize: number, solutionDirectory: string) {
+    private term: Terminal;
+    private resizeTimeout: number | null;
+    private solutionDirectory: string;
+    constructor(theme: ITheme, fontFamily: string, fontSize: number, solutionDirectory: string) {
+        this.solutionDirectory = solutionDirectory;
         this.term = new TerminalConstructor({
+            theme: theme,
             fontFamily: fontFamily + ', courier-new, courier, monospace',
             fontSize: fontSize,
             cols: 80,
@@ -22,15 +25,27 @@ export class TermView {
 
         this.term.open(document.getElementById('content'));
         fit(this.term);
-        this.term.on('data', window.external.TermData);
+        this.term.on('data', (data) => this.termData(data));
         VisualStudio.Events.on('ptyData', (data) => this.ptyData(data));
         VisualStudio.Events.on('themeChanged', (data) => {
             let theme = JSON.parse(data) as ITheme;
             this.setTheme(theme)
         });
         VisualStudio.Events.on('directoryChanged', (data) => {
+            this.solutionDirectory = data;
+
+            this.term.write('\x1b[H\x1b[2J');
+            this.term.writeln('solution changed, restarting terminal in new directory');
             this.closePty();
             this.initPty(data)
+        });
+        VisualStudio.Events.on('ptyExited', (data) => {
+            this.term.write('\x1b[H\x1b[2J');
+            this.term.writeln('the terminal exited, initializing a new instance of the terminal');
+            this.initPty(this.solutionDirectory)
+        });
+        VisualStudio.Events.on('focus', () => {
+            this.term.focus();
         });
         window.addEventListener("resize", () => this.resizeHandler())
         this.registerKeyboardHandlers();
@@ -46,7 +61,7 @@ export class TermView {
         window.external.ClosePty();
     }
 
-    termData(data: string) {
+    private termData(data: string) {
         window.external.TermData(data);
     }
 

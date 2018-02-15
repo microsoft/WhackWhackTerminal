@@ -83,7 +83,12 @@
     <TypeScriptSourceRoot />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BetterBrowser.cs" />
+    <Compile Include="BrowserBridge\BetterBrowser.cs" />
+    <Compile Include="BrowserBridge\ITerminalScriptingObject.cs" />
+    <Compile Include="BrowserBridge\TerminalRegex.cs" />
+    <Compile Include="BrowserBridge\TerminalScriptingObject.cs" />
+    <Compile Include="BrowserBridge\TerminalEvent.cs" />
+    <Compile Include="BrowserBridge\TerminalThemer.cs" />
     <Compile Include="TerminalTheme.cs" />
     <Compile Include="ITerminalBackend.cs" />
     <Compile Include="NodePtyBackend.cs" />
@@ -360,7 +365,7 @@
       <Content Include="node_modules\xterm\dist\xterm.js">
         <IncludeInVSIX>true</IncludeInVSIX>
       </Content>
-      <Content Include="node_modules\systemjs\dist\system.js">
+      <Content Include="node_modules\requirejs\require.js">
         <IncludeInVSIX>true</IncludeInVSIX>
       </Content>
     </ItemGroup>

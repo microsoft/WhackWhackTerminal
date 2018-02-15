@@ -1,4 +1,8 @@
 ﻿interface External {
+    GetTheme(): string;
+    GetFontFamily(): string;
+    GetFontSize(): number;
+    GetSolutionDir(): string;
     InitPty(cols: number, rows: number, dir: string): void;
     ClosePty(): void;
     CopyStringToClipboard(stringToCopy: string): void;
@@ -10,6 +14,4 @@
     ValidateLocalLink(link: string): boolean;
 }
 
-interface Window {
-    triggerEvent: { (event: string, data: any): void };
-}
+declare var triggerEvent: {(event: string, data: any): void };

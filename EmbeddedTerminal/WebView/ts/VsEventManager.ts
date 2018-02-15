@@ -2,7 +2,9 @@
     const eventStrings = {
         themeChanged: '',
         ptyData: '',
-        directoryChanged: ''
+        ptyExited: '',
+        directoryChanged: '',
+        focus: ''
     };
 
     export type EventType = keyof typeof eventStrings;
@@ -24,7 +26,7 @@
             Events.handlers[event as string] = Events.handlers[event as string].filter(h => h !== handler);
         }
 
-        static triggerEvent(event: 'themeChanged' | 'ptyData' | 'directoryChanged', data: any) {
+        static triggerEvent(event: EventType, data: any) {
             Events.handlers[event as string].forEach(handler => handler(data));
         }
     }
