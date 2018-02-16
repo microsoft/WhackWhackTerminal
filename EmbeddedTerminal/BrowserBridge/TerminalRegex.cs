@@ -76,6 +76,7 @@ namespace EmbeddedTerminal
 
         private static string PreprocessPath(string path)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             // resolve ~
             if (path[0] == '~')
             {

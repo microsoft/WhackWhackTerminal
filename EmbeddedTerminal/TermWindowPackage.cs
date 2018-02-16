@@ -5,11 +5,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using EmbeddedTerminal.VSService;
+using Microsoft.ServiceHub.Client;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 using Microsoft.Win32;
 using Task = System.Threading.Tasks.Task;
 
@@ -57,11 +61,49 @@ namespace EmbeddedTerminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
 
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TermWindowCommand.InitializeCommandAsync(this);
             TermWindowPackage.Instance = this;
+        }
+
+        public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)
+        {
+            if (toolWindowType.Equals(new Guid(TermWindow.TermWindowGuidString)))
+            {
+                return this;
+            }
+
+            return null;
+        }
+
+        protected override string GetToolWindowTitle(Type toolWindowType, int id)
+        {
+            if (toolWindowType == typeof(TermWindow))
+            {
+                return "Terminal Window";
+            }
+            return base.GetToolWindowTitle(toolWindowType, id);
+        }
+
+        protected override async Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
+        {
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solutionService = (IVsSolution)await this.GetServiceAsync(typeof(SVsSolution));
+            var componentModel = (IComponentModel)await this.GetServiceAsync(typeof(SComponentModel));
+            var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
+            var solutionUtils = new SolutionUtils(solutionService, workspaceService);
+
+            var client = new HubClient();
+            var clientStream = await client.RequestServiceAsync("wwt.pty");
+            return new ToolWindowContext()
+            {
+                Package = this,
+                ServiceHubStream = clientStream,
+                SolutionUtils = solutionUtils,
+            };
         }
 
         public static TermWindowPackage Instance

@@ -15,19 +15,21 @@
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid("f7090fd8-8163-4e9a-9616-45ff87e0816e")]
+    [Guid(TermWindowGuidString)]
     public class TermWindow : ToolWindowPane
     {
+        public const string TermWindowGuidString = "f7090fd8-8163-4e9a-9616-45ff87e0816e";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindow"/> class.
         /// </summary>
-        public TermWindow() : base(null)
+        public TermWindow(ToolWindowContext context) : base()
         {
             this.Caption = "Terminal Window";
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new TermWindowControl(null);
+            this.Content = new TermWindowControl(context);
         }
     }
 }

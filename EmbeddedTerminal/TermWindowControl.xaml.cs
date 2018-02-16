@@ -17,30 +17,19 @@
     /// </summary>
     public partial class TermWindowControl : UserControl, IDisposable
     {
-        private readonly ITerminalBackend backend;
-        internal readonly SolutionUtils solutionUtils;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
-        public TermWindowControl(ITerminalBackend backend)
+        public TermWindowControl(ToolWindowContext context)
         {
             this.InitializeComponent();
 
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
-            this.backend = backend;
-            var solutionService = ThreadHelper.JoinableTaskFactory.Run(async () => (IVsSolution)await TermWindowPackage.Instance.GetServiceAsync(typeof(SVsSolution)));
-            var componentModel = ThreadHelper.JoinableTaskFactory.Run(async () => (IComponentModel)await TermWindowPackage.Instance.GetServiceAsync(typeof(SComponentModel)));
-            var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
-            this.solutionUtils = new SolutionUtils(solutionService, workspaceService);
 
-            var client = new HubClient();
-            var clientStream = client.RequestServiceAsync("wwt.pty").Result;
-
-            var target = new TerminalEvent(this.terminalView, this.solutionUtils);
-            var rpc = JsonRpc.Attach(clientStream, target);
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(rpc, this.solutionUtils);
+            var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
+            var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(rpc, context.SolutionUtils);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");

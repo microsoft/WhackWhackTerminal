@@ -17,6 +17,7 @@ namespace EmbeddedTerminal
 
         public TerminalOptionPage()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             IVsSettingsManager settingsManager = (IVsSettingsManager)ServiceProvider.GlobalProvider.GetService(typeof(SVsSettingsManager));
             this.model = new TerminalOptionsModel(settingsManager);
         }

@@ -26,6 +26,7 @@ namespace EmbeddedTerminal
 
         public string GetSolutionDir()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
 
             // solution may sometimes be null in an open folder scenario.
@@ -41,6 +42,7 @@ namespace EmbeddedTerminal
         {
             add
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 this.solutionService.AdviseSolutionEvents(new SolutionEvents(this.solutionService, value), out var cookie);
 
                 Func<object, EventArgs, Task> adapterLambda = (sender, _) => 
@@ -60,6 +62,7 @@ namespace EmbeddedTerminal
             }
             remove
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 this.solutionService.UnadviseSolutionEvents(cookieMap[value]);
                 cookieMap.Remove(value);
                 lambdaMap.Remove(value);
@@ -109,6 +112,7 @@ namespace EmbeddedTerminal
 
             public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
                 this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
                 this.handler(solutionDir);
                 return Microsoft.VisualStudio.VSConstants.S_OK;
