@@ -66,7 +66,6 @@ namespace EmbeddedTerminal
 
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TermWindowCommand.InitializeCommandAsync(this);
-            TermWindowPackage.Instance = this;
         }
 
         public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)
@@ -104,12 +103,6 @@ namespace EmbeddedTerminal
                 ServiceHubStream = clientStream,
                 SolutionUtils = solutionUtils,
             };
-        }
-
-        public static TermWindowPackage Instance
-        {
-            get;
-            private set;
         }
 
         public DefaultTerminal OptionTerminal

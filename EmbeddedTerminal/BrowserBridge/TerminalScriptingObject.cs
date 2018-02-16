@@ -10,11 +10,13 @@ namespace EmbeddedTerminal
     [ComVisible(true)]
     public class TerminalScriptingObject : ITerminalScriptingObject
     {
+        private readonly TermWindowPackage package;
         private readonly JsonRpc ptyService;
         private readonly SolutionUtils solutionUtils;
 
-        internal TerminalScriptingObject(JsonRpc ptyService, SolutionUtils solutionUtils)
+        internal TerminalScriptingObject(TermWindowPackage package, JsonRpc ptyService, SolutionUtils solutionUtils)
         {
+            this.package = package;
             this.ptyService = ptyService;
             this.solutionUtils = solutionUtils;
         }
@@ -26,12 +28,12 @@ namespace EmbeddedTerminal
 
         public string GetFontFamily()
         {
-            return TermWindowPackage.Instance.OptionFontFamily;
+            return this.package.OptionFontFamily;
         }
 
         public int GetFontSize()
         {
-            return TermWindowPackage.Instance.OptionFontSize;
+            return this.package.OptionFontSize;
         }
 
         public string GetSolutionDir()
@@ -71,7 +73,7 @@ namespace EmbeddedTerminal
 
         public void InitPty(int cols, int rows, string directory)
         {
-            this.ptyService.InvokeAsync("initTerm", TermWindowPackage.Instance?.OptionTerminal.ToString(), cols, rows, directory, TermWindowPackage.Instance?.OptionStartupArgument);
+            this.ptyService.InvokeAsync("initTerm", this.package.OptionTerminal.ToString(), cols, rows, directory, this.package.OptionStartupArgument);
         }
 
         public void ResizePty(int cols, int rows)

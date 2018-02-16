@@ -24,7 +24,7 @@
         {
             this.package.JoinableTaskFactory.RunAsync(async () =>
             {
-                await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
                 this.browser.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
             });
         }
@@ -44,14 +44,14 @@
         [JsonRpcMethod("PtyData")]
         public async Task PtyDataAsync(string data)
         {
-            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.browser.Invoke("triggerEvent", "ptyData", data);
         }
 
         [JsonRpcMethod("PtyExit")]
         public async Task PtyExitAsync(int? code)
         {
-            await TermWindowPackage.Instance.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.browser.Invoke("triggerEvent", "ptyExited", code);
         }
     }

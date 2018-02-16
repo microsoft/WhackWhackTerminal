@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace EmbeddedTerminal.VSService
 {
-    public interface ITerminalWindow
+    public interface ITerminal
     {
-        Task<ITerminal> CreateTerminalAsync(string name, string workingDirectory, Environment environment, params string[] args);
+        void Show();
+        void Hide();
+        void Close();
+
+        event EventHandler Closed;
     }
 }

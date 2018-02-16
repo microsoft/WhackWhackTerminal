@@ -29,7 +29,7 @@
 
             var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
             var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(rpc, context.SolutionUtils);
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
