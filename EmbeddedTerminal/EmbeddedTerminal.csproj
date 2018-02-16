@@ -324,6 +324,13 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <SuppressFromVsix Include="Microsoft.ServiceHub.Client.dll" />
+    <SuppressFromVsix Include="Microsoft.VisualStudio.Workspace.dll" />
+    <SuppressFromVsix Include="Microsoft.VisualStudio.Workspace.Extensions.dll" />
+    <SuppressFromVsix Include="Microsoft.VisualStudio.Workspace.Extensions.VS.dll" />
+    <SuppressFromVsix Include="Microsoft.VisualStudio.Workspace.VSIntegration.Contracts.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
