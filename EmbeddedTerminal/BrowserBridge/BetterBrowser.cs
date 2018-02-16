@@ -28,6 +28,7 @@ namespace EmbeddedTerminal
         new System.Windows.Forms.Integration.WindowsFormsHost();
 
             this.browser = new System.Windows.Forms.WebBrowser();
+            this.browser.ScriptErrorsSuppressed = true;
             browser.WebBrowserShortcutsEnabled = true;
             browser.PreviewKeyDown += Browser_PreviewKeyDown;
             this.browser.DocumentCompleted += Browser_DocumentCompleted;
