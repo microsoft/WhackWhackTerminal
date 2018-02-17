@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using EmbeddedTerminal.VSService;
 using Microsoft.ServiceHub.Client;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -15,6 +14,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 using Microsoft.Win32;
+using WhackWhackTerminalServiceTypes;
 using Task = System.Threading.Tasks.Task;
 
 namespace EmbeddedTerminal
@@ -43,7 +43,7 @@ namespace EmbeddedTerminal
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(TermWindow), Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
-    [ProvideService(typeof(STerminalWindow))]
+    [ProvideService(typeof(SEmbeddedTerminalService), IsAsyncQueryable = true)]
     public sealed class TermWindowPackage : AsyncPackage
     {
         /// <summary>
@@ -61,11 +61,18 @@ namespace EmbeddedTerminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
+
+            this.AddService(typeof(SEmbeddedTerminalService), CreateServiceAsync);
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
 
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TermWindowCommand.InitializeCommandAsync(this);
+        }
+
+        private Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType)
+        {
+            return Task.FromResult((object)new EmbeddedTerminalService(this));
         }
 
         public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmbeddedTerminal.VSService
+namespace WhackWhackTerminalServiceTypes
 {
-    public interface ITerminal
+    public interface IEmbeddedTerminal
     {
-        void Show();
+        Task ShowAsync();
         void Hide();
         void Close();
 

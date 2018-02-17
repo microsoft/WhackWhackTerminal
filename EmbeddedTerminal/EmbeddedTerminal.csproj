@@ -89,9 +89,9 @@
     <Compile Include="BrowserBridge\TerminalScriptingObject.cs" />
     <Compile Include="BrowserBridge\TerminalEvent.cs" />
     <Compile Include="BrowserBridge\TerminalThemer.cs" />
-    <Compile Include="TerminalTheme.cs" />
-    <Compile Include="ITerminalBackend.cs" />
-    <Compile Include="NodePtyBackend.cs" />
+    <Compile Include="VsService\EmbeddedTerminal.cs" />
+    <Compile Include="VsService\EmbeddedTerminalService.cs" />
+    <Compile Include="BrowserBridge\TerminalTheme.cs" />
     <Compile Include="Options\OptionItemAttribute.cs" />
     <Compile Include="Options\OptionsModel.cs" />
     <Compile Include="Options\TerminalOptionsModel.cs" />
@@ -107,9 +107,6 @@
     </Compile>
     <Compile Include="TermWindowPackage.cs" />
     <Compile Include="ToolWindowContext.cs" />
-    <Compile Include="VSService\ITerminal.cs" />
-    <Compile Include="VSService\ITerminalWindow.cs" />
-    <Compile Include="VSService\STerminalWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BrandWhackWhackTerminal_256x.png">
@@ -357,6 +354,12 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.31\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WhackWhackTerminalServiceTypes\WhackWhackTerminalServiceTypes.csproj">
+      <Project>{4befdab9-7266-43d6-8089-7723865aa483}</Project>
+      <Name>WhackWhackTerminalServiceTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
