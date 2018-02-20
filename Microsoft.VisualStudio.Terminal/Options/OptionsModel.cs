@@ -1,17 +1,11 @@
 ﻿using Microsoft.VisualStudio.Settings;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     internal abstract class OptionsModel
     {

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     [ComVisible(true)]

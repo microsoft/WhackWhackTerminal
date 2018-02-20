@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Controls;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
 
     /// <summary>

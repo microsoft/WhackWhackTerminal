@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     internal static class TerminalRegex
     {

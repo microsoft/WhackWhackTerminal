@@ -1,4 +1,4 @@
-﻿namespace EmbeddedTerminal
+﻿namespace Microsoft.VisualStudio.Terminal
 {
     internal interface ITerminalScriptingObject
     {

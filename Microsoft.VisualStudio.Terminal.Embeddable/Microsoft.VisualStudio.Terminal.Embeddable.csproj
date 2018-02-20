@@ -7,7 +7,7 @@
     <ProjectGuid>{4BEFDAB9-7266-43D6-8089-7723865AA483}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.VisualStudio.Terminal.Embeddable</RootNamespace>
+    <RootNamespace>Microsoft.VisualStudio.Terminal</RootNamespace>
     <AssemblyName>Microsoft.VisualStudio.Terminal.Embeddable</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

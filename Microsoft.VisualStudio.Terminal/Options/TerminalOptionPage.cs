@@ -1,15 +1,7 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     public class TerminalOptionPage : DialogPage
     {

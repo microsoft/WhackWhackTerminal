@@ -1,24 +1,17 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using EmbeddedTerminal.VsService;
+using Microsoft.VisualStudio.Terminal.VsService;
 using Microsoft.ServiceHub.Client;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
-using Microsoft.Win32;
-using WhackWhackTerminalServiceTypes;
 using Task = System.Threading.Tasks.Task;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

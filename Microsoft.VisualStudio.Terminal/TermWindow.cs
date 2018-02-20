@@ -1,4 +1,4 @@
-﻿namespace EmbeddedTerminal
+﻿namespace Microsoft.VisualStudio.Terminal
 {
     using System;
     using System.Runtime.InteropServices;

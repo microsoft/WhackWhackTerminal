@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Drawing;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     internal static class TerminalThemer
     {

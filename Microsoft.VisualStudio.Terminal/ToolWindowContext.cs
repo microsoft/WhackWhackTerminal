@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace EmbeddedTerminal
+namespace Microsoft.VisualStudio.Terminal
 {
     public class ToolWindowContext
     {

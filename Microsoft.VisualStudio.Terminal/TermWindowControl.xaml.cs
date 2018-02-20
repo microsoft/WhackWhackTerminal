@@ -1,4 +1,4 @@
-﻿namespace EmbeddedTerminal
+﻿namespace Microsoft.VisualStudio.Terminal
 {
     using Microsoft.VisualStudio.Shell;
     using System.IO;
