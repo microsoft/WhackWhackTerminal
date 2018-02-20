@@ -356,7 +356,7 @@
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.31\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WhackWhackTerminalServiceTypes\Microsoft.VisualStudio.Terminal.Embeddable.csproj">
+    <ProjectReference Include="..\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj">
       <Project>{4befdab9-7266-43d6-8089-7723865aa483}</Project>
       <Name>Microsoft.VisualStudio.Terminal.Embeddable</Name>
     </ProjectReference>
