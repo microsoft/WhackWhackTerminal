@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WhackWhackTerminalServiceTypes;
 
-namespace EmbeddedTerminal
+namespace EmbeddedTerminal.VsService
 {
     public class EmbeddedTerminalService : SEmbeddedTerminalService, IEmbeddedTerminalService
     {
@@ -16,9 +16,15 @@ namespace EmbeddedTerminal
             this.package = package;
         }
 
-        public Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
+        public async Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
         {
-            throw new NotImplementedException();
+            var pane = (TermWindow)await package.ShowToolWindowAsync(
+                    typeof(TermWindow),
+                    0,
+                    create: true,
+                    cancellationToken: package.DisposalToken);
+
+            return new EmbeddedTerminal(this.package, pane);
         }
     }
 }

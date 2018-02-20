@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using EmbeddedTerminal.VsService;
 using Microsoft.ServiceHub.Client;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -52,7 +53,6 @@ namespace EmbeddedTerminal
         public const string PackageGuidString = "35b633bd-cdfb-4eda-8c26-f557e419eb8a";
 
         private IVsSettingsManager settingsManager;
-        #region Package Members
 
         /// <summary> 
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -61,8 +61,8 @@ namespace EmbeddedTerminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
+            this.AddService(typeof(SEmbeddedTerminalService), CreateServiceAsync, promote: true);
 
-            this.AddService(typeof(SEmbeddedTerminalService), CreateServiceAsync);
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
 
@@ -156,7 +156,5 @@ namespace EmbeddedTerminal
                 return optionsModel.FontSize;
             }
         }
-
-        #endregion
     }
 }

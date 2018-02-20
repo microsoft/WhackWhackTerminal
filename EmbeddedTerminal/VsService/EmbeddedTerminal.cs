@@ -10,12 +10,14 @@ namespace EmbeddedTerminal.VsService
     public class EmbeddedTerminal : IEmbeddedTerminal
     {
         private readonly TermWindowPackage package;
+        private readonly TermWindow windowPane;
 
         public event EventHandler Closed;
 
-        public EmbeddedTerminal(TermWindowPackage package)
+        public EmbeddedTerminal(TermWindowPackage package, TermWindow windowPane)
         {
             this.package = package;
+            this.windowPane = windowPane;
         }
 
         public void Close()

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WhackWhackTerminalServiceTypes
 {
+    [ComImport, Guid("BA8EB030-CDE7-4377-8B42-A7FB400FDD84")]
     public interface SEmbeddedTerminalService
     {
     }
