@@ -28,7 +28,7 @@
     <ProjectGuid>{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EmbeddedTerminal</RootNamespace>
+    <RootNamespace>Microsoft.VisualStudio.Terminal</RootNamespace>
     <AssemblyName>WhackWhackTerminal</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
@@ -356,9 +356,9 @@
     <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.31\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WhackWhackTerminalServiceTypes\WhackWhackTerminalServiceTypes.csproj">
+    <ProjectReference Include="..\WhackWhackTerminalServiceTypes\Microsoft.VisualStudio.Terminal.Embeddable.csproj">
       <Project>{4befdab9-7266-43d6-8089-7723865aa483}</Project>
-      <Name>WhackWhackTerminalServiceTypes</Name>
+      <Name>Microsoft.VisualStudio.Terminal.Embeddable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

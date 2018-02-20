@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26913.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmbeddedTerminal", "EmbeddedTerminal\EmbeddedTerminal.csproj", "{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.VisualStudio.Terminal", "EmbeddedTerminal\Microsoft.VisualStudio.Terminal.csproj", "{ED2D97CC-2A98-48D4-AE1F-2277CB987C04}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{032FDE40-347B-4441-A50B-1BF2D4A0CEB2}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhackWhackTerminalServiceTypes", "WhackWhackTerminalServiceTypes\WhackWhackTerminalServiceTypes.csproj", "{4BEFDAB9-7266-43D6-8089-7723865AA483}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.VisualStudio.Terminal.Embeddable", "WhackWhackTerminalServiceTypes\Microsoft.VisualStudio.Terminal.Embeddable.csproj", "{4BEFDAB9-7266-43D6-8089-7723865AA483}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
