@@ -16,7 +16,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
         public async Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
         {
             var pane = (ServiceToolWindow)await package.FindToolWindowAsync(
-                    typeof(TermWindow),
+                    typeof(ServiceToolWindow),
                     nextToolWindowId++,
                     create: true,
                     cancellationToken: package.DisposalToken);
