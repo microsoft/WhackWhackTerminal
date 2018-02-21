@@ -9,8 +9,9 @@ namespace Microsoft.VisualStudio.Terminal
     public interface IEmbeddedTerminal
     {
         Task ShowAsync();
-        void Hide();
-        void Close();
+        Task HideAsync();
+        Task CloseAsync();
+        void ChangeWorkingDirectory(string newDirectory);
 
         event EventHandler Closed;
     }

@@ -14,31 +14,6 @@
         {
             this.package = package;
             this.browser = browser;
-            this.solutionUtils = solutionUtils;
-
-            this.solutionUtils.SolutionChanged += SolutionUtils_SolutionChanged;
-            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
-        }
-
-        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
-        {
-            this.package.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-                this.browser.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
-            });
-        }
-
-        private void SolutionUtils_SolutionChanged(string solutionDir)
-        {
-            if (this.package.OptionChangeDirectory)
-            {
-                this.package.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    this.browser.Invoke("triggerEvent", "directoryChanged", solutionDir);
-                });
-            }
         }
 
         [JsonRpcMethod("PtyData")]

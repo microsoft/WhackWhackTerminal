@@ -35,7 +35,7 @@ namespace Microsoft.VisualStudio.Terminal
     [Guid(TermWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(TermWindow), Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
+    [ProvideToolWindow(typeof(TermWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
     [ProvideService(typeof(SEmbeddedTerminalService), IsAsyncQueryable = true)]
     public sealed class TermWindowPackage : AsyncPackage

@@ -13,12 +13,27 @@ namespace Microsoft.VisualStudio.Terminal
         private readonly TermWindowPackage package;
         private readonly JsonRpc ptyService;
         private readonly SolutionUtils solutionUtils;
+        private readonly string workingDirectory;
+        private readonly bool useSolutionDir;
+        private readonly string shellPath;
+        private readonly string args;
 
-        internal TerminalScriptingObject(TermWindowPackage package, JsonRpc ptyService, SolutionUtils solutionUtils)
+        internal TerminalScriptingObject(
+            TermWindowPackage package,
+            JsonRpc ptyService,
+            SolutionUtils solutionUtils,
+            string workingDirectory,
+            bool useSolutionDir,
+            string shellPath,
+            string args)
         {
             this.package = package;
             this.ptyService = ptyService;
             this.solutionUtils = solutionUtils;
+            this.workingDirectory = workingDirectory;
+            this.useSolutionDir = useSolutionDir;
+            this.shellPath = shellPath;
+            this.args = args;
         }
 
         public string GetTheme()
@@ -38,6 +53,11 @@ namespace Microsoft.VisualStudio.Terminal
 
         public string GetSolutionDir()
         {
+            if (!this.useSolutionDir)
+            {
+                return this.workingDirectory;
+            }
+
             var solutionDir = this.solutionUtils.GetSolutionDir();
             if (solutionDir == null)
             {
@@ -73,7 +93,7 @@ namespace Microsoft.VisualStudio.Terminal
 
         public void InitPty(int cols, int rows, string directory)
         {
-            this.ptyService.InvokeAsync("initTerm", this.package.OptionTerminal.ToString(), cols, rows, directory, this.package.OptionStartupArgument);
+            this.ptyService.InvokeAsync("initTerm", this.shellPath ?? this.package.OptionTerminal.ToString(), cols, rows, directory, this.args ?? this.package.OptionStartupArgument);
         }
 
         public void ResizePty(int cols, int rows)

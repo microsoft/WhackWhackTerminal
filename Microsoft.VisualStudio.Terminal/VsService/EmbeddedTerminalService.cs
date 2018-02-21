@@ -5,6 +5,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
 {
     public class EmbeddedTerminalService : SEmbeddedTerminalService, IEmbeddedTerminalService
     {
+        private int nextToolWindowId = 1;
         private readonly TermWindowPackage package;
 
         public EmbeddedTerminalService(TermWindowPackage package)
@@ -14,11 +15,13 @@ namespace Microsoft.VisualStudio.Terminal.VsService
 
         public async Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
         {
-            var pane = (TermWindow)await package.ShowToolWindowAsync(
+            var pane = (TermWindow)await package.FindToolWindowAsync(
                     typeof(TermWindow),
-                    0,
+                    nextToolWindowId++,
                     create: true,
                     cancellationToken: package.DisposalToken);
+            pane.Caption = name;
+            ((TermWindowControl)pane.Content).FinishInitialize(false, workingDirectory, string.Join(" ", args));
 
             return new EmbeddedTerminal(this.package, pane);
         }

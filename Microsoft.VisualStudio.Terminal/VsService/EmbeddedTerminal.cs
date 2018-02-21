@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.Terminal.VsService
@@ -16,17 +17,25 @@ namespace Microsoft.VisualStudio.Terminal.VsService
             this.windowPane = windowPane;
         }
 
-        public void Close()
+        public async Task CloseAsync()
         {
-            throw new NotImplementedException();
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            (this.windowPane.Frame as IVsWindowFrame)?.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
         }
 
-        public void Hide()
+        public async Task HideAsync()
         {
-            throw new NotImplementedException();
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            (this.windowPane.Frame as IVsWindowFrame)?.Hide();
         }
 
-        public Task ShowAsync()
+        public async Task ShowAsync()
+        {
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            (this.windowPane.Frame as IVsWindowFrame)?.Show();
+        }
+
+        public void ChangeWorkingDirectory(string newDirectory)
         {
             throw new NotImplementedException();
         }

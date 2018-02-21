@@ -6,17 +6,18 @@
     using System.Windows;
     using System.Windows.Controls;
     using System;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.ServiceHub.Client;
-    using Microsoft.VisualStudio.ComponentModelHost;
-    using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
     using StreamJsonRpc;
+    using Microsoft.VisualStudio.PlatformUI;
 
     /// <summary>
     /// Interaction logic for TermWindowControl.
     /// </summary>
     public partial class TermWindowControl : UserControl, IDisposable
     {
+        private readonly SolutionUtils solutionUtils;
+        private readonly TermWindowPackage package;
+        private readonly JsonRpc rpc;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
         /// </summary>
@@ -28,8 +29,21 @@
             this.GotFocus += TermWindowControl_GotFocus;
 
             var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
-            var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils);
+            this.rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            this.package = context.Package;
+            this.solutionUtils = context.SolutionUtils;
+        }
+
+        internal void FinishInitialize(bool useSolutionDir, string workingDirectory = null, string shellPath = null, string args = null)
+        {
+            if (useSolutionDir)
+            {
+                this.solutionUtils.SolutionChanged += SolutionUtils_SolutionChanged;
+            }
+
+            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.rpc, this.solutionUtils, workingDirectory, useSolutionDir, shellPath, args);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
@@ -48,6 +62,27 @@
             // No functionality is lost when this happens but it is not consistent with VS design conventions.
             this.Focus();
             this.terminalView.Invoke("triggerEvent", "focus");
+        }
+
+        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        {
+            this.package.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+                this.terminalView.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
+            });
+        }
+
+        private void SolutionUtils_SolutionChanged(string solutionDir)
+        {
+            if (this.package.OptionChangeDirectory)
+            {
+                this.package.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    this.terminalView.Invoke("triggerEvent", "directoryChanged", solutionDir);
+                });
+            }
         }
     }
 }
