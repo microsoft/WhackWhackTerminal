@@ -8,7 +8,6 @@
     {
         private readonly TermWindowPackage package;
         private readonly BetterBrowser browser;
-        private readonly SolutionUtils solutionUtils;
 
         public TerminalEvent(TermWindowPackage package, BetterBrowser browser, SolutionUtils solutionUtils)
         {

@@ -1,39 +1,43 @@
 ﻿namespace Microsoft.VisualStudio.Terminal
 {
-    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.PlatformUI;
+    using StreamJsonRpc;
+    using System;
     using System.IO;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
-    using System;
-    using StreamJsonRpc;
-    using Microsoft.VisualStudio.PlatformUI;
 
     /// <summary>
-    /// Interaction logic for TermWindowControl.
+    /// Interaction logic for ServiceToolWindowControl.
     /// </summary>
-    public partial class TermWindowControl : UserControl, IDisposable
+    public partial class ServiceToolWindowControl : UserControl
     {
+        private readonly SolutionUtils solutionUtils;
         private readonly TermWindowPackage package;
+        private readonly JsonRpc rpc;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TermWindowControl"/> class.
+        /// Initializes a new instance of the <see cref="ServiceToolWindowControl"/> class.
         /// </summary>
-        public TermWindowControl(ToolWindowContext context)
+        public ServiceToolWindowControl(ToolWindowContext context)
         {
             this.InitializeComponent();
 
-            this.package = context.Package;
             this.Focusable = true;
             this.GotFocus += TermWindowControl_GotFocus;
 
             var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
-            var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            this.rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            this.package = context.Package;
+            this.solutionUtils = context.SolutionUtils;
+        }
 
-            context.SolutionUtils.SolutionChanged += SolutionUtils_SolutionChanged;
+        internal void FinishInitialize(string workingDirectory = null, string shellPath = null, string args = null)
+        {
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils, null, true, null, null);
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.rpc, this.solutionUtils, workingDirectory, false, shellPath, args);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
@@ -61,18 +65,6 @@
                 await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
                 this.terminalView.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
             });
-        }
-
-        private void SolutionUtils_SolutionChanged(string solutionDir)
-        {
-            if (this.package.OptionChangeDirectory)
-            {
-                this.package.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    this.terminalView.Invoke("triggerEvent", "directoryChanged", solutionDir);
-                });
-            }
         }
     }
 }

@@ -50,7 +50,6 @@ namespace Microsoft.VisualStudio.Terminal
                     0,
                     create: true,
                     cancellationToken: package.DisposalToken);
-                ((TermWindowControl)window.Content).FinishInitialize(useSolutionDir: true);
             }).FileAndForget("WhackWhackTerminal/TerminalWindow/Open");
         }
     }

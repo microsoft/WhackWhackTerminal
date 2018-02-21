@@ -15,13 +15,13 @@ namespace Microsoft.VisualStudio.Terminal.VsService
 
         public async Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
         {
-            var pane = (TermWindow)await package.FindToolWindowAsync(
+            var pane = (ServiceToolWindow)await package.FindToolWindowAsync(
                     typeof(TermWindow),
                     nextToolWindowId++,
                     create: true,
                     cancellationToken: package.DisposalToken);
             pane.Caption = name;
-            ((TermWindowControl)pane.Content).FinishInitialize(false, workingDirectory, string.Join(" ", args));
+            ((ServiceToolWindowControl)pane.Content).FinishInitialize(workingDirectory, string.Join(" ", args));
 
             return new EmbeddedTerminal(this.package, pane);
         }

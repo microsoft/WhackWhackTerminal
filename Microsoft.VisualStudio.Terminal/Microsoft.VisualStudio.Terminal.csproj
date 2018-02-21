@@ -89,6 +89,10 @@
     <Compile Include="BrowserBridge\TerminalScriptingObject.cs" />
     <Compile Include="BrowserBridge\TerminalEvent.cs" />
     <Compile Include="BrowserBridge\TerminalThemer.cs" />
+    <Compile Include="ServiceToolWindow.cs" />
+    <Compile Include="ServiceToolWindowControl.xaml.cs">
+      <DependentUpon>ServiceToolWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VsService\EmbeddedTerminal.cs" />
     <Compile Include="VsService\EmbeddedTerminalService.cs" />
     <Compile Include="BrowserBridge\TerminalTheme.cs" />
@@ -157,6 +161,10 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ServiceToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TermWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

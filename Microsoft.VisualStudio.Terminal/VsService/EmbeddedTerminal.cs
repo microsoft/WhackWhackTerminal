@@ -7,11 +7,11 @@ namespace Microsoft.VisualStudio.Terminal.VsService
     public class EmbeddedTerminal : IEmbeddedTerminal
     {
         private readonly TermWindowPackage package;
-        private readonly TermWindow windowPane;
+        private readonly ServiceToolWindow windowPane;
 
         public event EventHandler Closed;
 
-        public EmbeddedTerminal(TermWindowPackage package, TermWindow windowPane)
+        public EmbeddedTerminal(TermWindowPackage package, ServiceToolWindow windowPane)
         {
             this.package = package;
             this.windowPane = windowPane;

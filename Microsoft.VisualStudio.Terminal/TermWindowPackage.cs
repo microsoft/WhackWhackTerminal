@@ -35,7 +35,8 @@ namespace Microsoft.VisualStudio.Terminal
     [Guid(TermWindowPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(TermWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
+    [ProvideToolWindow(typeof(TermWindow), Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
+    [ProvideToolWindow(typeof(ServiceToolWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = TermWindow.TermWindowGuidString)]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
     [ProvideService(typeof(SEmbeddedTerminalService), IsAsyncQueryable = true)]
     public sealed class TermWindowPackage : AsyncPackage
@@ -70,7 +71,7 @@ namespace Microsoft.VisualStudio.Terminal
 
         public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)
         {
-            if (toolWindowType.Equals(new Guid(TermWindow.TermWindowGuidString)))
+            if (toolWindowType.Equals(new Guid(TermWindow.TermWindowGuidString)) || toolWindowType.Equals(new Guid(ServiceToolWindow.ServiceToolWindowGuid)))
             {
                 return this;
             }
@@ -80,10 +81,11 @@ namespace Microsoft.VisualStudio.Terminal
 
         protected override string GetToolWindowTitle(Type toolWindowType, int id)
         {
-            if (toolWindowType == typeof(TermWindow))
+            if (toolWindowType == typeof(TermWindow) || toolWindowType == typeof(ServiceToolWindow))
             {
                 return "Terminal Window";
             }
+
             return base.GetToolWindowTitle(toolWindowType, id);
         }
 
