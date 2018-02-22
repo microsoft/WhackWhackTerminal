@@ -18,5 +18,5 @@ build_script:
 artifacts:
   - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
     name: WhackWhackTerminal
-  - path: '.\Microsoft.VisualStudio.Terminal.Embedded\**\*.nupkg'
+  - path: '.\Microsoft.VisualStudio.Terminal.Embeddable\**\*.nupkg'
     name: NuGet Package
