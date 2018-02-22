@@ -5,7 +5,7 @@ install:
   - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 before_build:
-  - ps: Vsix-IncrementVsixVersion -versionType revision | Vsix-UpdateBuildVersion
+  - ps: Vsix-IncrementVsixVersion -manifestFilePath '.\Microsoft.VisualStudio.Terminal\source.extension.vsixmanifest' -versionType revision | Vsix-UpdateBuildVersion
   - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0\\.0\\.0\\.0' '{version}'
 
 build_script:
