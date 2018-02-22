@@ -44,6 +44,15 @@
             this.terminalView.Navigate(new Uri(rootPath));
         }
 
+        public void ChangeWorkingDirectory(string workingDirectory)
+        {
+            this.package.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+                this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
+            });
+        }
+
         public void Dispose()
         {
             var helper = (ITerminalScriptingObject)this.terminalView.ScriptingObject;

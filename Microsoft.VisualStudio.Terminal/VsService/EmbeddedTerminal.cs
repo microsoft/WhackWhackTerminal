@@ -46,7 +46,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
 
         public void ChangeWorkingDirectory(string newDirectory)
         {
-            throw new NotImplementedException();
+            ((ServiceToolWindowControl)this.windowPane.Content).ChangeWorkingDirectory(newDirectory);
         }
 
         private class WindowFrameEvents: IVsWindowFrameNotify, IVsWindowFrameNotify2

@@ -1,6 +1,7 @@
 ﻿namespace TerminalServiceTests
 {
     using Microsoft.VisualStudio.Terminal;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Windows;
@@ -52,6 +53,11 @@
         private async void Close_Click(object sender, RoutedEventArgs e)
         {
             await this.terminal.CloseAsync();
+        }
+
+        private void Change_Click(object sender, RoutedEventArgs e)
+        {
+            this.terminal.ChangeWorkingDirectory(this.DirectoryPath.Text);
         }
     }
 }
