@@ -31,6 +31,12 @@
         private async void Create_Click(object sender, RoutedEventArgs e)
         {
             this.terminal = await this.terminalService.CreateTerminalAsync("test name", "C:\\", Enumerable.Empty<string>(), Enumerable.Empty<string>());
+            this.terminal.Closed += Terminal_Closed;
+        }
+
+        private void Terminal_Closed(object sender, System.EventArgs e)
+        {
+            MessageBox.Show("Terminal has closed");
         }
 
         private async void Show_Click(object sender, RoutedEventArgs e)
