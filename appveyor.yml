@@ -16,7 +16,7 @@ build_script:
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build,pack
 
 artifacts:
-  - path: **\*.vsix
+  - path: '**\*.vsix'
     name: WhackWhackTerminal
-  - path: bin\**\*.nupkg
+  - path: 'bin\**\*.nupkg'
     name: NuGet Package
