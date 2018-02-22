@@ -6,14 +6,17 @@ install:
 
 before_build:
   - ps: Vsix-IncrementVsixVersion -versionType revision | Vsix-UpdateBuildVersion
+  - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0\\.0\\.0\\.0' '{version}'
 
 build_script:
   - nuget restore -Verbosity quiet
-  - cd EmbeddedTerminal
+  - cd Microsoft.VisualStudio.Terminal
   - npm install
   - cd ..
-  - msbuild .\EmbeddedTerminal\EmbeddedTerminal.csproj /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build,pack
 
 artifacts:
-  - path: '**\*.vsix'
+  - path: **\*.vsix
     name: WhackWhackTerminal
+  - path: bin\**\*.nupkg
+    name: NuGet Package

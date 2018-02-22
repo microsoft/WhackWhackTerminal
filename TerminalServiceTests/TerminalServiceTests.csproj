@@ -118,6 +118,11 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.15.0.15.6.27413\lib\net45\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Embeddable, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Embeddable.15.5.27130\lib\net45\Microsoft.VisualStudio.Shell.Embeddable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Framework.15.6.27413\lib\net45\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
       <Private>True</Private>
