@@ -6,14 +6,14 @@ install:
 
 before_build:
   - ps: Vsix-IncrementVsixVersion -manifestFilePath '.\Microsoft.VisualStudio.Terminal\source.extension.vsixmanifest' -versionType revision | Vsix-UpdateBuildVersion
-  - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0\\.0\\.0\\.0' '{version}'
+  - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0.0.0.0' '{version}'
 
 build_script:
   - nuget restore -Verbosity quiet
   - cd Microsoft.VisualStudio.Terminal
   - npm install
   - cd ..
-  - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build,pack
+  - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
 
 artifacts:
   - path: '**\*.vsix'

@@ -15,5 +15,6 @@
         <FileVersion>0.0.0.0</FileVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 </Project>
