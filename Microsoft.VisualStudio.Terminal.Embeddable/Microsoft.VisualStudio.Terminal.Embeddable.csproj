@@ -17,4 +17,10 @@
         <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
+    <ItemGroup>
+      <Content Include="Microsoft.VisualStudio.Terminal.Embeddable.targets">
+        <PackagePath>build</PackagePath>
+        <Pack>true</Pack>
+      </Content>
+    </ItemGroup>
 </Project>
