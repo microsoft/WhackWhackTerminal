@@ -61,6 +61,7 @@
       <DependentUpon>TerminalFunctionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TerminalFunctionsPackage.cs" />
+    <Compile Include="ToolWindowContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -232,6 +233,7 @@
     <ProjectReference Include="..\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj">
       <Project>{4befdab9-7266-43d6-8089-7723865aa483}</Project>
       <Name>Microsoft.VisualStudio.Terminal.Embeddable</Name>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

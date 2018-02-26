@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
 
 namespace Microsoft.VisualStudio.Terminal.VsService
 {
@@ -13,7 +14,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
             this.package = package;
         }
 
-        public async Task<IEmbeddedTerminal> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
+        public async Task<object> CreateTerminalAsync(string name, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
         {
             await this.package.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
             var pane = (ServiceToolWindow)await package.FindToolWindowAsync(

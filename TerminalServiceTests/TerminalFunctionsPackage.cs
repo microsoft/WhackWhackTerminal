@@ -79,9 +79,15 @@ namespace TerminalServiceTests
             return "Terminal Functions";
         }
 
-        protected override Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
+        protected override async Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
         {
-            return this.GetServiceAsync(typeof(SEmbeddedTerminalService));
+            var terminalService = (IEmbeddedTerminalService)await this.GetServiceAsync(typeof(SEmbeddedTerminalService));
+
+            return new ToolWindowContext()
+            {
+                Package = this,
+                TerminalService = terminalService
+            };
         }
     }
 }

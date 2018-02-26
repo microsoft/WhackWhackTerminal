@@ -22,14 +22,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalFunctions"/> class.
         /// </summary>
-        public TerminalFunctions(IEmbeddedTerminalService terminalService) : base(null)
+        public TerminalFunctions(ToolWindowContext context) : base(null)
         {
             this.Caption = "TerminalFunctions";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new TerminalFunctionsControl(terminalService);
+            this.Content = new TerminalFunctionsControl(context);
         }
     }
 }
