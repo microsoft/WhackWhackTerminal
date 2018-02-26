@@ -5,6 +5,7 @@
     using System;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -44,13 +45,10 @@
             this.terminalView.Navigate(new Uri(rootPath));
         }
 
-        public void ChangeWorkingDirectory(string workingDirectory)
+        public async Task ChangeWorkingDirectoryAsync(string workingDirectory)
         {
-            this.package.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-                this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
-            });
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
         }
 
         public void Dispose()

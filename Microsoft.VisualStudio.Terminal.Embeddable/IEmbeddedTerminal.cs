@@ -10,7 +10,7 @@ namespace Microsoft.VisualStudio.Terminal
         Task ShowAsync();
         Task HideAsync();
         Task CloseAsync();
-        void ChangeWorkingDirectory(string newDirectory);
+        Task ChangeWorkingDirectoryAsync(string newDirectory);
 
         event EventHandler Closed;
     }

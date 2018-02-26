@@ -62,7 +62,7 @@
 
         private void Change_Click(object sender, RoutedEventArgs e)
         {
-            this.terminal?.ChangeWorkingDirectory(this.DirectoryPath.Text);
+            this.package.JoinableTaskFactory.RunAsync(() => this.terminal?.ChangeWorkingDirectoryAsync(this.DirectoryPath.Text));
         }
     }
 }
