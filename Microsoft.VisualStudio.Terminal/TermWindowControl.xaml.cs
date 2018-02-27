@@ -63,7 +63,7 @@
             });
         }
 
-        private void SolutionUtils_SolutionChanged(string solutionDir)
+        private void SolutionUtils_SolutionChanged(object sender, string solutionDir)
         {
             if (this.package.OptionChangeDirectory)
             {

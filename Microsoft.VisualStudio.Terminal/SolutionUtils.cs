@@ -11,13 +11,18 @@ namespace Microsoft.VisualStudio.Terminal
     {
         private readonly IVsSolution solutionService;
         private readonly IVsWorkspaceFactory workspaceService;
-        private readonly Dictionary<Action<string>, uint> cookieMap = new Dictionary<Action<string>, uint>();
-        private readonly Dictionary<Action<string>, Func<object, EventArgs, Task>> lambdaMap = new Dictionary<Action<string>, Func<object, EventArgs, Task>>();
 
         public SolutionUtils(IVsSolution solutionService, IVsWorkspaceFactory workspaceService)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             this.solutionService = solutionService;
             this.workspaceService = workspaceService;
+
+            var events = new SolutionEvents(solutionService, this);
+            this.solutionService.AdviseSolutionEvents(events, out var cookie);
+            events.Cookie = cookie;
+
+            this.workspaceService.OnActiveWorkspaceChanged += WorkspaceChangedAsync;
         }
 
         public string GetSolutionDir()
@@ -34,46 +39,34 @@ namespace Microsoft.VisualStudio.Terminal
             return solutionDir;
         }
 
-        public event Action<string> SolutionChanged
+        public event EventHandler<string> SolutionChanged;
+
+        private Task WorkspaceChangedAsync(object sender, EventArgs args)
         {
-            add
+            var workspaceFactory = sender as IVsWorkspaceFactory;
+            if (workspaceFactory?.CurrentWorkspace?.Location != null)
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                this.solutionService.AdviseSolutionEvents(new SolutionEvents(this.solutionService, value), out var cookie);
-
-                Func<object, EventArgs, Task> adapterLambda = (sender, _) => 
-                {
-                    var thing = sender as IVsWorkspaceFactory;
-                    if (thing?.CurrentWorkspace?.Location != null)
-                    {
-                        value(thing?.CurrentWorkspace.Location);
-                    }
-
-                    return Task.CompletedTask;
-                };
-
-                this.workspaceService.OnActiveWorkspaceChanged += adapterLambda;
-                lambdaMap[value] = adapterLambda;
-                cookieMap[value] = cookie;
+                this.SolutionChanged?.Invoke(this, workspaceFactory?.CurrentWorkspace.Location);
             }
-            remove
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                this.solutionService.UnadviseSolutionEvents(cookieMap[value]);
-                cookieMap.Remove(value);
-                lambdaMap.Remove(value);
-            }
+
+            return Task.CompletedTask;
         }
 
         private class SolutionEvents : IVsSolutionEvents
         {
             private readonly IVsSolution solutionService;
-            private readonly Action<string> handler;
+            private readonly SolutionUtils solutionUtils;
 
-            public SolutionEvents(IVsSolution solutionService, Action<string> handler)
+            public SolutionEvents(IVsSolution solutionService, SolutionUtils solutionUtils)
             {
                 this.solutionService = solutionService;
-                this.handler = handler;
+                this.solutionUtils = solutionUtils;
+            }
+
+            public uint? Cookie
+            {
+                get;
+                set;
             }
 
             public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
@@ -110,7 +103,7 @@ namespace Microsoft.VisualStudio.Terminal
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
                 this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
-                this.handler(solutionDir);
+                this.solutionUtils.SolutionChanged?.Invoke(this.solutionUtils, solutionDir);
                 return Microsoft.VisualStudio.VSConstants.S_OK;
             }
 
