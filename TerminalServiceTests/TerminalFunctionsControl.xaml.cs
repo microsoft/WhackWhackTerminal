@@ -35,7 +35,7 @@
         {
             this.package.JoinableTaskFactory.RunAsync(async () =>
             {
-                this.terminal = (ITerminal)await this.terminalService.CreateTerminalAsync("test name", "C:\\", Enumerable.Empty<string>(), Enumerable.Empty<string>());
+                this.terminal = (ITerminal)await this.terminalService.CreateTerminalAsync("test name", null, "C:\\", Enumerable.Empty<string>(), Enumerable.Empty<string>());
                 this.terminal.Closed += Terminal_Closed;
             });
         }

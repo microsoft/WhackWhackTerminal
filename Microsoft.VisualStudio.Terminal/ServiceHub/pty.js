@@ -29,18 +29,19 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
     }
 
     var startupArg = ' ' + argument;
+    var shelltospawn;
     switch (shell) {
         case 'Powershell':
-            var shelltospawn = powerShellPath;
+            shelltospawn = powerShellPath;
             break;
         case 'CMD':
-            var shelltospawn = cmdPath;
+            shelltospawn = cmdPath;
             break;
         case 'WSLBash':
-            var shelltospawn = bashPath;
+            shelltospawn = bashPath;
             break;
         default:
-            var shelltospawn = powerShellPath;
+            shelltospawn = shell;
     }
 
     this.ptyConnection = pty.spawn(shelltospawn, startupArg, {
@@ -59,19 +60,19 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
 }
 
 ServicePty.prototype.termData = function (data) {
-    if (this.ptyConnection != null) {
+    if (this.ptyConnection !== null) {
         this.ptyConnection.write(data);
     }
 }
 
 ServicePty.prototype.resizeTerm = function (cols, rows) {
-    if (this.ptyConnection != null) {
+    if (this.ptyConnection !== null) {
         this.ptyConnection.resize(cols, rows);
     }
 }
 
 ServicePty.prototype.closeTerm = function () {
-    if (this.ptyConnection != null) {
+    if (this.ptyConnection !== null) {
         this.ptyConnection.destroy();
         this.ptyConnection.removeAllListeners('exit');
         this.ptyConnection = null;
