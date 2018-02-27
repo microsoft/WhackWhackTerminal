@@ -10,7 +10,7 @@ namespace TerminalServiceTests
             set;
         }
 
-        public IEmbeddedTerminalService TerminalService
+        public ITerminalService TerminalService
         {
             get;
             set;

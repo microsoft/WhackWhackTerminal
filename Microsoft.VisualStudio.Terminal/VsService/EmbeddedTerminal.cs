@@ -5,7 +5,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.Terminal.VsService
 {
-    public class EmbeddedTerminal : IEmbeddedTerminal
+    public class EmbeddedTerminal : ITerminal
     {
         private readonly TermWindowPackage package;
         private readonly ServiceToolWindow windowPane;

@@ -81,7 +81,7 @@ namespace TerminalServiceTests
 
         protected override async Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
         {
-            var terminalService = (IEmbeddedTerminalService)await this.GetServiceAsync(typeof(SEmbeddedTerminalService));
+            var terminalService = (ITerminalService)await this.GetServiceAsync(typeof(STerminalService));
 
             return new ToolWindowContext()
             {

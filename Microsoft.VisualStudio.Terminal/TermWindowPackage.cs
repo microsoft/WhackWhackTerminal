@@ -38,7 +38,7 @@ namespace Microsoft.VisualStudio.Terminal
     [ProvideToolWindow(typeof(TermWindow), Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
     [ProvideToolWindow(typeof(ServiceToolWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = TermWindow.TermWindowGuidString)]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
-    [ProvideService(typeof(SEmbeddedTerminalService), IsAsyncQueryable = true)]
+    [ProvideService(typeof(STerminalService), IsAsyncQueryable = true)]
     public sealed class TermWindowPackage : AsyncPackage
     {
         /// <summary>
@@ -55,7 +55,7 @@ namespace Microsoft.VisualStudio.Terminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
-            this.AddService(typeof(SEmbeddedTerminalService), CreateServiceAsync, promote: true);
+            this.AddService(typeof(STerminalService), CreateServiceAsync, promote: true);
 
             await this.JoinableTaskFactory.SwitchToMainThreadAsync();
             this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));

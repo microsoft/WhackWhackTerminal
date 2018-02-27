@@ -12,9 +12,9 @@
     /// </summary>
     public partial class TerminalFunctionsControl : UserControl
     {
-        private readonly IEmbeddedTerminalService terminalService;
+        private readonly ITerminalService terminalService;
         private readonly TerminalFunctionsPackage package;
-        private IEmbeddedTerminal terminal;
+        private ITerminal terminal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalFunctionsControl"/> class.
@@ -35,7 +35,7 @@
         {
             this.package.JoinableTaskFactory.RunAsync(async () =>
             {
-                this.terminal = (IEmbeddedTerminal)await this.terminalService.CreateTerminalAsync("test name", "C:\\", Enumerable.Empty<string>(), Enumerable.Empty<string>());
+                this.terminal = (ITerminal)await this.terminalService.CreateTerminalAsync("test name", "C:\\", Enumerable.Empty<string>(), Enumerable.Empty<string>());
                 this.terminal.Closed += Terminal_Closed;
             });
         }

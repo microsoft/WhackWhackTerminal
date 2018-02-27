@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Microsoft.VisualStudio.Terminal.VsService
 {
-    public class EmbeddedTerminalService : SEmbeddedTerminalService, IEmbeddedTerminalService
+    public class EmbeddedTerminalService : STerminalService, ITerminalService
     {
         private int nextToolWindowId = 1;
         private readonly TermWindowPackage package;
