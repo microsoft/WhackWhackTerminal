@@ -4,7 +4,7 @@
        The decision whether an assembly needs to be linked or referenced belongs to the package author.
        It's very important that you make this target name as unique as possible to avoid clashes. Ideally you would include both your package name and the assembly being embedded in the name.
        -->
-  <Target Name="Embedding_Microsoft.VisualStudio.Terminal.Embeddable_Target" AfterTargets="ResolveReferences" BeforeTargets="FindReferenceAssembliesForReferences">
+  <Target Name="Embedding_MicrosoftVisualStudioTerminalEmbeddable_Target" AfterTargets="ResolveReferences" BeforeTargets="FindReferenceAssembliesForReferences">
     <PropertyGroup>
       <_InteropAssemblyFileName>Microsoft.VisualStudio.Terminal.Embeddable</_InteropAssemblyFileName>
     </PropertyGroup>
