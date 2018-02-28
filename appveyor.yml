@@ -16,8 +16,10 @@ build_script:
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
 
 after_build:
-  - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
+  - ps: Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
 
 artifacts:
+  - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
+    name: WhackWhackTerminal
   - path: '.\Microsoft.VisualStudio.Terminal.Embeddable\**\*.nupkg'
     name: NuGet Package
