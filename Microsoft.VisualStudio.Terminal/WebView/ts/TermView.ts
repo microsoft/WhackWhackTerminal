@@ -19,6 +19,7 @@ export class TermView {
             theme: theme,
             fontFamily: fontFamily + ', courier-new, courier, monospace',
             fontSize: fontSize,
+            cursorBlink: true,
             cols: 80,
             rows: 24
         });
