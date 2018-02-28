@@ -16,6 +16,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>WhackWhackTerminal.Embeddable</PackageId>
     </PropertyGroup>
     <ItemGroup>
       <Content Include="Microsoft.VisualStudio.Terminal.Embeddable.targets">
