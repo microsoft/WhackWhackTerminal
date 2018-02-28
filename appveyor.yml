@@ -1,3 +1,7 @@
+branches:
+  only:
+    - master
+
 image: Visual Studio 2017
 
 install:
@@ -5,7 +9,7 @@ install:
   - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 before_build:
-  - ps: Vsix-IncrementVsixVersion -manifestFilePath '.\Microsoft.VisualStudio.Terminal\source.extension.vsixmanifest' -versionType revision | Vsix-UpdateBuildVersion
+  - ps: Vsix-IncrementVsixVersion -manifestFilePath '.\Microsoft.VisualStudio.Terminal\source.extension.vsixmanifest' -versionType revision | Vsix-UpdateBuildVersion -updateOnPullRequests
   - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0.0.0.0' '{version}'
 
 build_script:
@@ -14,6 +18,9 @@ build_script:
   - npm install
   - cd ..
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
+
+deploy_script:
+  - ps: If ($env:APPVEYOR_REPO_BRANCH -Match "master") { Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix' }
 
 artifacts:
   - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
