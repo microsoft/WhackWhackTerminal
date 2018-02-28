@@ -15,7 +15,7 @@ build_script:
   - cd ..
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
 
-after_build:
+deploy_script:
   - ps: >-
       If ($env:APPVEYOR_REPO_BRANCH -Match "master") {
         Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
