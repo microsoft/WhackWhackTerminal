@@ -1,0 +1,31 @@
+﻿<!-- saved from url=(0016)http://localhost -->
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset="utf-8" />
+    <title>Terminal Window</title>
+    <link rel="stylesheet" href="../node_modules/xterm/dist/xterm.css" />
+    <link rel="stylesheet" href="default.css" data-plugin-theme="true" />
+    <script src="../node_modules/requirejs/require.js"></script>
+    <script>
+        function triggerEvent(event, data) { }
+        requirejs.config({
+            paths: {
+                'xterm': '../node_modules/xterm/dist/xterm',
+                'xterm/lib/addons/fit': '../node_modules/xterm/dist/addons/fit/fit'
+            }
+        });
+
+        require(['main']);
+    </script>
+</head>
+<body>
+    <div id="content" style="height: 100%">
+    </div>
+    <div id="debug">
+        debug:
+    </div>
+</body>
+</html>

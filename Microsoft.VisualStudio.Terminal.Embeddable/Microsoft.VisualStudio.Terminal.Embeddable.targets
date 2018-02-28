@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- See https://github.com/NuGet/Home/issues/2365 for more info.
+       The decision whether an assembly needs to be linked or referenced belongs to the package author.
+       It's very important that you make this target name as unique as possible to avoid clashes. Ideally you would include both your package name and the assembly being embedded in the name.
+       -->
+  <Target Name="Embedding_MicrosoftVisualStudioTerminalEmbeddable_Target" AfterTargets="ResolveReferences" BeforeTargets="FindReferenceAssembliesForReferences">
+    <PropertyGroup>
+      <_InteropAssemblyFileName>Microsoft.VisualStudio.Terminal.Embeddable</_InteropAssemblyFileName>
+    </PropertyGroup>
+    <!-- This target will set the EmbedInteropTypes metadata for the _InteropAssemblyFileName value in the current package. In order for a target to be executed in NuGet, the target name should be the same as the package id.-->
+    <ItemGroup>
+      <ReferencePath Condition=" '%(FileName)' == '$(_InteropAssemblyFileName)' AND '%(ReferencePath.NuGetPackageId)' == '$(MSBuildThisFileName)' ">
+        <EmbedInteropTypes>true</EmbedInteropTypes>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+</Project>

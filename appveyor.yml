@@ -1,11 +1,22 @@
 image: Visual Studio 2017
 
 install:
-  - ps: Install-Product node 6 x86
+  - ps: Install-Product node 8 x86
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+
+before_build:
+  - ps: Vsix-IncrementVsixVersion -manifestFilePath '.\Microsoft.VisualStudio.Terminal\source.extension.vsixmanifest' -versionType revision | Vsix-UpdateBuildVersion
+  - ps: Vsix-TokenReplacement .\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj '0.0.0.0' '{version}'
 
 build_script:
   - nuget restore -Verbosity quiet
-  - cd EmbeddedTerminal
+  - cd Microsoft.VisualStudio.Terminal
   - npm install
   - cd ..
-  - msbuild .\EmbeddedTerminal\EmbeddedTerminal.csproj /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
+
+artifacts:
+  - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
+    name: WhackWhackTerminal
+  - path: '.\Microsoft.VisualStudio.Terminal.Embeddable\**\*.nupkg'
+    name: NuGet Package

@@ -4,7 +4,7 @@
 ## Prerequisites
 You need the following components installed in order to build WhackWhackTerminal
 - Visual Studio 2017 with extensibility workload
-- Node.js v6.11.2 LTS (**32-bit**)
+- Node.js v8.9.4 LTS (**32-bit**)
 - Python 2.7
 - Visual C++ Build Tools 2015
 
