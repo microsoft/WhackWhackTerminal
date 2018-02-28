@@ -33,7 +33,7 @@
             context.SolutionUtils.SolutionChanged += SolutionUtils_SolutionChanged;
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils, null, true, null, null);
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils, null, true, null, null, null);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");

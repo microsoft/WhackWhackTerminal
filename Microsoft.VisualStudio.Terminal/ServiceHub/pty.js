@@ -16,19 +16,19 @@ function ServicePty(stream, _host) {
     this.connection = rpc.createMessageConnection(new rpc.StreamMessageReader(stream), new rpc.StreamMessageWriter(stream));
     this.ptyConnection = null;
 
-    this.connection.onRequest('initTerm', (shell, cols, rows, start, argument) => this.initTerm(shell, cols, rows, start, argument));
+    this.connection.onRequest('initTerm', (shell, cols, rows, start, args, env) => this.initTerm(shell, cols, rows, start, args, env));
     this.connection.onRequest('termData', (data) => this.termData(data));
     this.connection.onRequest('resizeTerm', (cols, rows) => this.resizeTerm(cols, rows));
     this.connection.onRequest('closeTerm', () => this.closeTerm());
     this.connection.listen();
 }
 
-ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument) {
+ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, args, env) {
     if (this.ptyConnection !== null) {
         return;
     }
 
-    var startupArg = ' ' + argument;
+    var mergedEnvironment = Object.assign(process.env, env);
     var shelltospawn;
     switch (shell) {
         case 'Powershell':
@@ -44,12 +44,12 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, argument)
             shelltospawn = shell;
     }
 
-    this.ptyConnection = pty.spawn(shelltospawn, startupArg, {
+    this.ptyConnection = pty.spawn(shelltospawn, args, {
         name: 'vs-integrated-terminal',
         cols: cols,
         rows: rows,
         cwd: startDir,
-        env: process.env
+        env: mergedEnvironment
     });
 
     this.ptyConnection.on('data', (data) => this.connection.sendRequest('PtyData', [data]));

@@ -14,7 +14,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
             this.package = package;
         }
 
-        public async Task<object> CreateTerminalAsync(string name, string shellPath, string workingDirectory, IEnumerable<string> args, IEnumerable<string> environment)
+        public async Task<object> CreateTerminalAsync(string name, string shellPath, string workingDirectory, IEnumerable<string> args, IDictionary<string, string> environment)
         {
             await this.package.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
             var pane = (ServiceToolWindow)await package.FindToolWindowAsync(
@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
                     create: true,
                     cancellationToken: package.DisposalToken);
             pane.Caption = name;
-            ((ServiceToolWindowControl)pane.Content).FinishInitialize(workingDirectory, shellPath, string.Join(" ", args));
+            ((ServiceToolWindowControl)pane.Content).FinishInitialize(workingDirectory, shellPath, args, environment);
 
             return new EmbeddedTerminal(this.package, pane);
         }

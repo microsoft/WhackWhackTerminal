@@ -14,6 +14,5 @@
         <EmbedInteropTypes>true</EmbedInteropTypes>
       </ReferencePath>
     </ItemGroup>
-    <Error Text="Remember, the target name should be a unique name for your specific package. We recommended making this target name as unique as possible. Delete this error line once you have done that" />
   </Target>
 </Project>

@@ -1,5 +1,7 @@
-﻿using StreamJsonRpc;
+﻿using Microsoft.VisualStudio.Shell;
+using StreamJsonRpc;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows;
@@ -16,7 +18,8 @@ namespace Microsoft.VisualStudio.Terminal
         private readonly string workingDirectory;
         private readonly bool useSolutionDir;
         private readonly string shellPath;
-        private readonly string args;
+        private readonly IEnumerable<string> args;
+        private readonly IDictionary<string, string> env;
 
         internal TerminalScriptingObject(
             TermWindowPackage package,
@@ -25,7 +28,8 @@ namespace Microsoft.VisualStudio.Terminal
             string workingDirectory,
             bool useSolutionDir,
             string shellPath,
-            string args)
+            IEnumerable<string> args,
+            IDictionary<string, string> env)
         {
             this.package = package;
             this.ptyService = ptyService;
@@ -34,6 +38,7 @@ namespace Microsoft.VisualStudio.Terminal
             this.useSolutionDir = useSolutionDir;
             this.shellPath = shellPath;
             this.args = args;
+            this.env = env;
         }
 
         public string GetTheme()
@@ -93,17 +98,17 @@ namespace Microsoft.VisualStudio.Terminal
 
         public void InitPty(int cols, int rows, string directory)
         {
-            this.ptyService.InvokeAsync("initTerm", this.shellPath ?? this.package.OptionTerminal.ToString(), cols, rows, directory, this.args ?? this.package.OptionStartupArgument);
+            this.ptyService.InvokeAsync("initTerm", this.shellPath ?? this.package.OptionTerminal.ToString(), cols, rows, directory, ((object)this.args) ?? this.package.OptionStartupArgument, env).FileAndForget("WhackWhackTerminal/InitPty");
         }
 
         public void ResizePty(int cols, int rows)
         {
-            this.ptyService.InvokeAsync("resizeTerm", cols, rows);
+            this.ptyService.InvokeAsync("resizeTerm", cols, rows).FileAndForget("WhackWhackTerminal/ResizePty");
         }
 
         public void TermData(string data)
         {
-            this.ptyService.InvokeAsync("termData", data);
+            this.ptyService.InvokeAsync("termData", data).FileAndForget("WhackWhackTerminal/TermData");
         }
 
         public bool ValidateLocalLink(string link)

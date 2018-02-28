@@ -3,6 +3,7 @@
     using Microsoft.VisualStudio.PlatformUI;
     using StreamJsonRpc;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -12,7 +13,7 @@
     /// <summary>
     /// Interaction logic for ServiceToolWindowControl.
     /// </summary>
-    public partial class ServiceToolWindowControl : UserControl
+    public partial class ServiceToolWindowControl : UserControl, IDisposable
     {
         private readonly SolutionUtils solutionUtils;
         private readonly TermWindowPackage package;
@@ -34,11 +35,11 @@
             this.solutionUtils = context.SolutionUtils;
         }
 
-        internal void FinishInitialize(string workingDirectory = null, string shellPath = null, string args = null)
+        internal void FinishInitialize(string workingDirectory, string shellPath, IEnumerable<string> args, IDictionary<string, string> env)
         {
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.rpc, this.solutionUtils, workingDirectory, false, shellPath, args);
+            this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.rpc, this.solutionUtils, workingDirectory, false, shellPath, args, env);
 
             string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
