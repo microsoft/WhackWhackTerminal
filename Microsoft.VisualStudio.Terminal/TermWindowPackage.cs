@@ -151,5 +151,14 @@ namespace Microsoft.VisualStudio.Terminal
                 return optionsModel.FontSize;
             }
         }
+
+        public string OptionShellPath
+        {
+            get
+            {
+                TerminalOptionsModel optionsModel = new TerminalOptionsModel(this.settingsManager);
+                return optionsModel.ShellPath;
+            }
+        }
     }
 }

@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>net46</TargetFramework>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>0.0.0.0</Version>
         <Authors>Daniel Griffen</Authors>
         <Company />
         <Description>Interop types for WhackWhackTerminal service</Description>
@@ -11,8 +10,6 @@
         <PackageLicenseUrl>https://raw.githubusercontent.com/Microsoft/WhackWhackTerminal/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/Microsoft/WhackWhackTerminal</PackageProjectUrl>
         <PackageTags>WhackWhackTerminal VisualStudio Terminal</PackageTags>
-        <AssemblyVersion>0.0.0.0</AssemblyVersion>
-        <FileVersion>0.0.0.0</FileVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -23,5 +20,10 @@
         <PackagePath>build</PackagePath>
         <Pack>true</Pack>
       </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Nerdbank.GitVersioning" Version="2.1.23">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
 </Project>

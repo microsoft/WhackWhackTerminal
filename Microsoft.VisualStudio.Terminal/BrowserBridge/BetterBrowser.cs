@@ -46,6 +46,10 @@ namespace Microsoft.VisualStudio.Terminal
             {
                 e.IsInputKey = true;
             }
+            else if (e.Alt)
+            {
+                e.IsInputKey = true;
+            }
             else
             {
                 e.IsInputKey = false;

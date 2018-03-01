@@ -11,28 +11,32 @@ namespace Microsoft.VisualStudio.Terminal
 
         protected override string CollectionName => "WhackWhackTerminalSettings";
 
-        [Category("Whack Whack Terminal")]
+        [Category("Shell Selection")]
         [DisplayName("Default Shell")]
         [OptionItem]
         public DefaultTerminal OptionTerminal { get; set; } = DefaultTerminal.Powershell;
 
-        [Category("Whack Whack Terminal")]
+        [Category("Shell Selection")]
+        [DisplayName("Shell Path")]
+        [Description("Specifies the shell path when other is selected")]
+        [OptionItem]
+        public string ShellPath { get; set; } = string.Empty;
+
+        [Category("Appearance")]
         [DisplayName("Font Family")]
         [OptionItem]
         public string FontFamily { get; set; } = "Consolas";
 
-        [Category("Whack Whack Terminal")]
+        [Category("Appearance")]
         [DisplayName("Font Size")]
         [OptionItem]
         public int FontSize { get; set; } = 12;
 
-        [Category("Whack Whack Terminal")]
         [DisplayName("Startup Argument")]
         [OptionItem]
         public string StartupArgument { get; set; } = string.Empty;
 
-        [Category("Whack Whack Terminal")]
-        [DisplayName("Change Working Directory on Solution Load")]
+        [DisplayName("Change to Current Solution")]
         [OptionItem]
         public bool ChangeDirectory { get; set; } = true;
     }
@@ -41,6 +45,7 @@ namespace Microsoft.VisualStudio.Terminal
     {
         Powershell,
         CMD,
-        WSLBash
+        WSLBash,
+        Other
     }
 }
