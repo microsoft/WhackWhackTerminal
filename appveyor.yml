@@ -2,9 +2,6 @@ branches:
   only:
     - master
     - develop
-skip_commits:
-  files:
-  - '*.md'
 
 image: Visual Studio 2017
 
