@@ -76,7 +76,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Initial MVP release
 
 
-[Unreleased]: https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.8...HEAD
+[1.0]: https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.8...v1.0
 [0.2.8]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.7...v0.2.8
 [0.2.7]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.6...v0.2.7
 [0.2.6]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.5...v0.2.6
