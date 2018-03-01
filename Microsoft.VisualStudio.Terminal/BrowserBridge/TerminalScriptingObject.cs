@@ -98,7 +98,17 @@ namespace Microsoft.VisualStudio.Terminal
 
         public void InitPty(int cols, int rows, string directory)
         {
-            this.ptyService.InvokeAsync("initTerm", this.shellPath ?? this.package.OptionTerminal.ToString(), cols, rows, directory, ((object)this.args) ?? this.package.OptionStartupArgument, env).FileAndForget("WhackWhackTerminal/InitPty");
+            string configuredShellPath;
+            if (this.package.OptionTerminal == DefaultTerminal.Other)
+            {
+                configuredShellPath = this.package.OptionShellPath;
+            }
+            else
+            {
+                configuredShellPath = this.package.OptionTerminal.ToString();
+            }
+
+            this.ptyService.InvokeAsync("initTerm", this.shellPath ?? configuredShellPath, cols, rows, directory, ((object)this.args) ?? this.package.OptionStartupArgument, env).FileAndForget("WhackWhackTerminal/InitPty");
         }
 
         public void ResizePty(int cols, int rows)
