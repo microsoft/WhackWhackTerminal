@@ -22,7 +22,7 @@ build_script:
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
 
 deploy_script:
-  - ps: If ($env:APPVEYOR_REPO_BRANCH -Match "master") { Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix' }
+  - ps: If ($env:APPVEYOR_REPO_BRANCH -Match "develop") { Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix' }
 
 artifacts:
   - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
