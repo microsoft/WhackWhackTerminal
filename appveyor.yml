@@ -1,6 +1,7 @@
 branches:
   only:
     - master
+    - develop
 
 image: Visual Studio 2017
 
