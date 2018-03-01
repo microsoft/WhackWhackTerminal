@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="TerminalServiceTests.9f9b3768-a99e-4eb7-a675-5bd9eb16df05" Version="1.0" Language="en-US" Publisher="Daniel Griffen" />
+    <Identity Id="TerminalServiceTests.9f9b3768-a99e-4eb7-a675-5bd9eb16df05" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="Daniel Griffen" />
     <DisplayName>TerminalServiceTests</DisplayName>
     <Description>Empty VSIX Project.</Description>
   </Metadata>
