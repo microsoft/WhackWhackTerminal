@@ -2,9 +2,9 @@ branches:
   only:
     - master
     - develop
-skip_commite:
+skip_commits:
   files:
-  - *.md
+  - '*.md'
 
 image: Visual Studio 2017
 
