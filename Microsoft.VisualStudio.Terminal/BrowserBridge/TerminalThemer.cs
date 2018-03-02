@@ -48,7 +48,7 @@ namespace Microsoft.VisualStudio.Terminal
             BrightWhite = "#a5a5a5",
         };
 
-        public static string GetTheme()
+        public static TerminalTheme GetTheme()
         {
             TerminalTheme theme;
             if (VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxBackgroundColorKey).GetBrightness() < 0.5)
@@ -63,7 +63,7 @@ namespace Microsoft.VisualStudio.Terminal
             theme.Background = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxBackgroundColorKey));
             theme.Foreground = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxContentTextColorKey));
             theme.Cursor = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxContentTextColorKey));
-            return JsonConvert.SerializeObject(theme);
+            return theme;
         }
     }
 }

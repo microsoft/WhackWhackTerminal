@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.ScriptedHost.Messaging;
+using Microsoft.VisualStudio.Shell;
 using StreamJsonRpc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Microsoft.VisualStudio.Terminal
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     [ComVisible(true)]
-    public class TerminalScriptingObject : ITerminalScriptingObject
+    public class TerminalScriptingObject : JsonPortMarshaler, ITerminalScriptingObject
     {
         private readonly TermWindowPackage package;
         private readonly JsonRpc ptyService;
@@ -41,7 +42,7 @@ namespace Microsoft.VisualStudio.Terminal
             this.env = env;
         }
 
-        public string GetTheme()
+        public TerminalTheme GetTheme()
         {
             return TerminalThemer.GetTheme();
         }
@@ -124,6 +125,23 @@ namespace Microsoft.VisualStudio.Terminal
         public bool ValidateLocalLink(string link)
         {
             return TerminalRegex.ValidateLocalLink(link);
+        }
+
+        protected override void InitializeMarshaler()
+        {
+            this.RegisterMethod("getTheme", TerminalThemer.GetTheme);
+            this.RegisterMethod("getFontFamily", this.GetFontFamily);
+            this.RegisterMethod("getFontSize", this.GetFontSize);
+            this.RegisterMethod("getSolutionDir", this.GetSolutionDir);
+            this.RegisterAction<int, int, string>("initPty", this.InitPty);
+            this.RegisterAction("closePty", this.ClosePty);
+            this.RegisterAction<string>("copyStringToClipboard", this.CopyStringToClipboard);
+            this.RegisterMethod("getClipboard", this.GetClipboard);
+            this.RegisterAction<string>("termData", this.TermData);
+            this.RegisterAction<int, int>("resizePty", this.ResizePty);
+            this.RegisterMethod<string>("getLinkRegex", this.GetLinkRegex);
+            this.RegisterAction<string>("handleLocalLink", this.HandleLocalLink);
+            this.RegisterMethod<string, bool>("validateLocalLink", this.ValidateLocalLink);
         }
     }
 }

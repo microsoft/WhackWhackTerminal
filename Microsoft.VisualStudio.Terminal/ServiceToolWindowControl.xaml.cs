@@ -13,7 +13,7 @@
     /// <summary>
     /// Interaction logic for ServiceToolWindowControl.
     /// </summary>
-    public partial class ServiceToolWindowControl : UserControl, IDisposable
+    public partial class ServiceToolWindowControl : UserControl
     {
         private readonly SolutionUtils solutionUtils;
         private readonly TermWindowPackage package;
@@ -24,55 +24,55 @@
         /// </summary>
         public ServiceToolWindowControl(ToolWindowContext context)
         {
-            this.InitializeComponent();
+            //this.InitializeComponent();
 
-            this.Focusable = true;
-            this.GotFocus += TermWindowControl_GotFocus;
+            //this.Focusable = true;
+            //this.GotFocus += TermWindowControl_GotFocus;
 
-            var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
-            this.rpc = JsonRpc.Attach(context.ServiceHubStream, target);
-            this.package = context.Package;
-            this.solutionUtils = context.SolutionUtils;
+            //var target = new TerminalEvent(context.Package, this.terminalView, context.SolutionUtils);
+            //this.rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            //this.package = context.Package;
+            //this.solutionUtils = context.SolutionUtils;
         }
 
         internal void FinishInitialize(string workingDirectory, string shellPath, IEnumerable<string> args, IDictionary<string, string> env)
         {
-            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+            //VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.rpc, this.solutionUtils, workingDirectory, false, shellPath, args, env);
+            //this.terminalView.ScriptingObject = new TerminalScriptingObject(this.package, this.solutionUtils, workingDirectory, false, shellPath, args, env);
 
-            string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
-            this.terminalView.Navigate(new Uri(rootPath));
+            //string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //string rootPath = Path.Combine(extensionDirectory, "WebView\\default.html").Replace("\\\\", "\\");
+            //this.terminalView.Navigate(new Uri(rootPath));
         }
 
         public async Task ChangeWorkingDirectoryAsync(string workingDirectory)
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
+            //await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            //this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
         }
 
-        public void Dispose()
-        {
-            var helper = (ITerminalScriptingObject)this.terminalView.ScriptingObject;
-            helper.ClosePty();
-        }
+        //public void Dispose()
+        //{
+        //    var helper = (ITerminalScriptingObject)this.terminalView.ScriptingObject;
+        //    helper.ClosePty();
+        //}
 
-        private void TermWindowControl_GotFocus(object sender, RoutedEventArgs e)
-        {
-            // We call focus here because if we don't, the next call will prevent the toolbar from turning blue.
-            // No functionality is lost when this happens but it is not consistent with VS design conventions.
-            this.Focus();
-            this.terminalView.Invoke("triggerEvent", "focus");
-        }
+        //private void TermWindowControl_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    // We call focus here because if we don't, the next call will prevent the toolbar from turning blue.
+        //    // No functionality is lost when this happens but it is not consistent with VS design conventions.
+        //    this.Focus();
+        //    this.terminalView.Invoke("triggerEvent", "focus");
+        //}
 
-        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
-        {
-            this.package.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-                this.terminalView.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
-            });
-        }
+        //private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        //{
+        //    this.package.JoinableTaskFactory.RunAsync(async () =>
+        //    {
+        //        await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+        //        this.terminalView.Invoke("triggerEvent", "themeChanged", TerminalThemer.GetTheme());
+        //    });
+        //}
     }
 }

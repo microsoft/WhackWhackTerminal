@@ -2,7 +2,7 @@
 {
     internal interface ITerminalScriptingObject
     {
-        string GetTheme();
+        TerminalTheme GetTheme();
         string GetFontFamily();
         int GetFontSize();
         string GetSolutionDir();

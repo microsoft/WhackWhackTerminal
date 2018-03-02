@@ -1,32 +1,48 @@
 ﻿namespace Microsoft.VisualStudio.Terminal
 {
     using Microsoft.VisualStudio.PlatformUI;
+    using Microsoft.VisualStudio.ScriptedHost.Messaging;
     using StreamJsonRpc;
+    using System;
     using System.Threading.Tasks;
 
-    internal class TerminalEvent
+    internal class TerminalEvent: JsonPortMarshaler
     {
         private readonly TermWindowPackage package;
-        private readonly BetterBrowser browser;
+        private EventHandler<DataEventArgs> ptyDataEventHandler;
+        private EventHandler<string> ptyExitedEventHandler;
 
-        public TerminalEvent(TermWindowPackage package, BetterBrowser browser, SolutionUtils solutionUtils)
+        public TerminalEvent(TermWindowPackage package)
         {
             this.package = package;
-            this.browser = browser;
         }
 
         [JsonRpcMethod("PtyData")]
-        public async Task PtyDataAsync(string data)
+        public void PtyData(string data)
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            this.browser.Invoke("triggerEvent", "ptyData", data);
+            this.ptyDataEventHandler?.Invoke(this, new DataEventArgs(data));
         }
 
         [JsonRpcMethod("PtyExit")]
-        public async Task PtyExitAsync(int? code)
+        public void PtyExit(int? code)
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            this.browser.Invoke("triggerEvent", "ptyExited", code);
+            this.ptyExitedEventHandler?.Invoke(this, "");
+        }
+
+        protected override void InitializeMarshaler()
+        {
+            this.ptyDataEventHandler = this.RegisterEvent<DataEventArgs>("ptyData");
+            this.ptyExitedEventHandler = this.RegisterEvent<string>("ptyExited");
+        }
+    }
+
+    public class DataEventArgs: EventArgs
+    {
+        public string Value { get; set; }
+
+        public DataEventArgs(string value)
+        {
+            Value = value;
         }
     }
 }

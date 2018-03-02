@@ -10,6 +10,6 @@
              Foreground="{DynamicResource VsBrush.WindowText}"
              x:Name="MyToolWindow">
 	<Grid x:Name="mainGrid">
-        <local:BetterBrowser x:Name="terminalView" />
+        <ContentControl x:Name="terminalView" />
     </Grid>
 </UserControl>

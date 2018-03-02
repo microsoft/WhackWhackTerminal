@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Microsoft.VisualStudio.Shell;
+using System.IO;
 
 namespace Microsoft.VisualStudio.Terminal
 {
@@ -20,6 +21,12 @@ namespace Microsoft.VisualStudio.Terminal
         {
             set;
             get;
+        }
+
+        internal OleMenuCommandService CommandService
+        {
+            get;
+            set;
         }
     }
 }

@@ -1,28 +1,25 @@
 ﻿import { Terminal } from 'xterm';
 import { TermView } from './TermView';
-
+import { Marshal } from './marshals';
 const LOCAL_LINK_PRIORITY = -2;
 
-function handleLocalLink(event: MouseEvent, uri: string) {
+function handleLocalLink(marshal: Marshal, event: MouseEvent, uri: string) {
     // We call the handle function on a small timeout to cause it to happen after the click event has fully
     // propogated. This ensures that focus properly transfers to the editor.
-    setTimeout(() => window.external.HandleLocalLink(uri), 1);
+    setTimeout(() => marshal.handleLocalLink(uri), 1);
     event.preventDefault();
 }
 
-function validateLocalLink(uri: string, callback: { (isValid: boolean): void }) {
-    if (window.external.ValidateLocalLink(uri)) {
-        callback(true);
-    } else {
-        callback(false);
-    }
+function validateLocalLink(marshal: Marshal, uri: string, callback: { (isValid: boolean): void }) {
+    marshal.validateLocalLink(uri)
+        .then(callback);
 }
 
-export function registerLocalLinkHandler(terminal: Terminal) {
-    let regex = new RegExp(window.external.GetLinkRegex());
+export async function registerLocalLinkHandler(marshal: Marshal, terminal: Terminal): Microsoft.Plugin.Promise<void> {
+    let regex = new RegExp(await marshal.getLinkRegex());
 
-    terminal.registerLinkMatcher(regex, handleLocalLink, {
-        validationCallback: validateLocalLink,
+    terminal.registerLinkMatcher(regex, (event, uri) => handleLocalLink(marshal, event, uri), {
+        validationCallback: (uri, callback) => validateLocalLink(marshal, uri, callback),
         priority: LOCAL_LINK_PRIORITY
     });
 }

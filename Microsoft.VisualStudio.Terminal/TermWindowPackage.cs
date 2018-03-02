@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 using Task = System.Threading.Tasks.Task;
+using System.ComponentModel.Design;
 
 namespace Microsoft.VisualStudio.Terminal
 {
@@ -91,19 +92,23 @@ namespace Microsoft.VisualStudio.Terminal
 
         protected override async Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
         {
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            var solutionService = (IVsSolution)await this.GetServiceAsync(typeof(SVsSolution));
             var componentModel = (IComponentModel)await this.GetServiceAsync(typeof(SComponentModel));
+            var commandService = (OleMenuCommandService)await this.GetServiceAsync(typeof(IMenuCommandService));
             var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
-            var solutionUtils = new SolutionUtils(solutionService, workspaceService);
 
             var client = new HubClient();
             var clientStream = await client.RequestServiceAsync("wwt.pty");
+
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solutionService = (IVsSolution)await this.GetServiceAsync(typeof(SVsSolution));
+            var solutionUtils = new SolutionUtils(solutionService, workspaceService);
+
             return new ToolWindowContext()
             {
                 Package = this,
                 ServiceHubStream = clientStream,
                 SolutionUtils = solutionUtils,
+                CommandService = commandService
             };
         }
 

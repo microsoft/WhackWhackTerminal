@@ -2,6 +2,7 @@
 import { fit } from 'xterm/lib/addons/fit';
 import { VisualStudio } from './VsEventManager';
 import { registerLocalLinkHandler } from './TerminalLinkMatcher';
+import { Marshal } from './marshals';
 
 // This import and declaraion are necessary due to a strange issue with the way the xterm.js dist file is bundled.
 // The definition file would make it seem that the xterm import contains the Terminal object, but at runtime it
@@ -13,7 +14,9 @@ export class TermView {
     private term: Terminal;
     private resizeTimeout: number | null;
     private solutionDirectory: string;
-    constructor(theme: ITheme, fontFamily: string, fontSize: number, solutionDirectory: string) {
+    private marshal: Marshal;
+
+    constructor(marshal: Marshal, fontFamily: string, fontSize: number, solutionDirectory: string, theme: ITheme) {
         this.solutionDirectory = solutionDirectory;
         this.term = new TerminalConstructor({
             theme: theme,
@@ -23,11 +26,23 @@ export class TermView {
             cols: 80,
             rows: 24
         });
+        this.marshal = marshal;
 
         this.term.open(document.getElementById('content'));
         fit(this.term);
         this.term.on('data', (data) => this.termData(data));
-        VisualStudio.Events.on('ptyData', (data) => this.ptyData(data));
+
+        let events = Microsoft.Plugin.Utilities.JSONMarshaler.attachToPublishedObject('terminalEvents', {});
+        events.addEventListener('ptyData', (data) => {
+            this.ptyData(data.Value);
+        });
+
+        events.addEventListener('ptyExited', (data) => {
+            this.term.write('\x1b[H\x1b[2J');
+            this.term.writeln('the terminal exited, initializing a new instance of the terminal');
+            this.initPty(this.solutionDirectory);
+        });
+
         VisualStudio.Events.on('themeChanged', (data) => {
             let theme = JSON.parse(data) as ITheme;
             this.setTheme(theme)
@@ -40,30 +55,25 @@ export class TermView {
             this.closePty();
             this.initPty(data)
         });
-        VisualStudio.Events.on('ptyExited', (data) => {
-            this.term.write('\x1b[H\x1b[2J');
-            this.term.writeln('the terminal exited, initializing a new instance of the terminal');
-            this.initPty(this.solutionDirectory)
-        });
         VisualStudio.Events.on('focus', () => {
             this.term.focus();
         });
         window.addEventListener("resize", () => this.resizeHandler())
         this.registerKeyboardHandlers();
-        this.initPty(solutionDirectory);
-        registerLocalLinkHandler(this.term);
+        this.initPty(this.solutionDirectory);
+        registerLocalLinkHandler(marshal, this.term);
     }
 
     private initPty(cwd: string) {
-        window.external.InitPty(this.term.cols, this.term.rows, cwd);
+        this.marshal.initPty(this.term.cols, this.term.rows, cwd);
     }
 
     private closePty() {
-        window.external.ClosePty();
+        this.marshal.closePty();
     }
 
     private termData(data: string) {
-        window.external.TermData(data);
+        this.marshal.termData(data);
     }
 
     private ptyData(data: string) {
@@ -77,7 +87,7 @@ export class TermView {
     private resizeHandler() {
         let actualHandler = () => {
             fit(this.term);
-            window.external.ResizePty(this.term.cols, this.term.rows);
+            this.marshal.resizePty(this.term.cols, this.term.rows);
         };
 
         let timeoutCallback = () => {
@@ -86,7 +96,7 @@ export class TermView {
         }
 
         if (!this.resizeTimeout) {
-            this.resizeTimeout = setTimeout(() => timeoutCallback(), 66);
+            this.resizeTimeout = setTimeout(() => timeoutCallback(), 66) as any as number;
         }
     }
 
@@ -94,7 +104,7 @@ export class TermView {
         this.term.attachCustomKeyEventHandler((event) => {
             // capture Ctrl+C
             if (event.ctrlKey && event.keyCode === 67 && this.term.hasSelection()) {
-                window.external.CopyStringToClipboard(this.term.getSelection());
+                this.marshal.copyStringToClipboard(this.term.getSelection());
                 this.term.clearSelection();
                 return false;
             // capture Ctrl+V
@@ -103,12 +113,12 @@ export class TermView {
             }
         });
 
-        window.addEventListener('contextmenu', (event) => {
+        window.addEventListener('contextmenu', async (event) => {
             if (this.term.hasSelection()) {
-                window.external.CopyStringToClipboard(this.term.getSelection());
+                await this.marshal.copyStringToClipboard(this.term.getSelection());
                 this.term.clearSelection();
             } else {
-                let content = window.external.GetClipboard();
+                let content = await this.marshal.getClipboard();
                 this.termData(content);
             }
         });
