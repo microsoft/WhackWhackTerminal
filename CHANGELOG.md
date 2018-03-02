@@ -4,8 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0] - 2018-3-5
+### Added
+- Service API
+- Ability to set shell path
 
+### Changed
+- Terminal directory now changes whenever the solution changes
+
+### Fixed
+- Alt key combos no longer print character to terminal
+- Text now correctly themes on all color configurations
 
 ## [0.2.8] - 2017-9-22
 ### Added
@@ -67,7 +76,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Initial MVP release
 
 
-[Unreleased]: https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.8...HEAD
+[1.0]: https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.8...v1.0
 [0.2.8]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.7...v0.2.8
 [0.2.7]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.6...v0.2.7
 [0.2.6]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.5...v0.2.6
