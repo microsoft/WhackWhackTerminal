@@ -9,8 +9,6 @@ using System.Windows;
 
 namespace Microsoft.VisualStudio.Terminal
 {
-    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    [ComVisible(true)]
     public class TerminalScriptingObject : JsonPortMarshaler, ITerminalScriptingObject
     {
         private readonly TermWindowPackage package;
@@ -41,6 +39,8 @@ namespace Microsoft.VisualStudio.Terminal
             this.args = args;
             this.env = env;
         }
+
+        public event EventHandler GotFocus;
 
         public TerminalTheme GetTheme()
         {
@@ -142,6 +142,10 @@ namespace Microsoft.VisualStudio.Terminal
             this.RegisterMethod<string>("getLinkRegex", this.GetLinkRegex);
             this.RegisterAction<string>("handleLocalLink", this.HandleLocalLink);
             this.RegisterMethod<string, bool>("validateLocalLink", this.ValidateLocalLink);
+            this.RegisterAction("sendFocus", () =>
+            {
+                this.GotFocus?.Invoke(this, EventArgs.Empty);
+            });
         }
     }
 }

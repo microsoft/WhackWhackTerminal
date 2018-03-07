@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
                     create: true,
                     cancellationToken: package.DisposalToken);
             pane.Caption = name;
-            ((ServiceToolWindowControl)pane.Content).FinishInitialize(workingDirectory, shellPath, args, environment);
+            pane.FinishInitialize(workingDirectory, shellPath, args, environment);
 
             return new EmbeddedTerminal(this.package, pane);
         }

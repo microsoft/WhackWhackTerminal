@@ -13,6 +13,9 @@
       <ReferencePath Condition=" '%(FileName)' == '$(_InteropAssemblyFileName)' AND '%(ReferencePath.NuGetPackageId)' == '$(MSBuildThisFileName)' ">
         <EmbedInteropTypes>true</EmbedInteropTypes>
       </ReferencePath>
+      <PackageReferencePath Condition=" '%(FileName)' == '$(_InteropAssemblyFileName)' AND '%(ReferencePath.NuGetPackageId)' == '$(MSBuildThisFileName)' ">
+        <EmbedInteropTypes>true</EmbedInteropTypes>
+      </PackageReferencePath>
     </ItemGroup>
   </Target>
 </Project>

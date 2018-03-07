@@ -14,4 +14,13 @@ export interface Marshal {
     getLinkRegex(): Microsoft.Plugin.Promise<string>;
     handleLocalLink(uri: string): Microsoft.Plugin.Promise<void>;
     validateLocalLink(link: string): Microsoft.Plugin.Promise<boolean>;
+    sendFocus(): Microsoft.Plugin.Promise<void>;
+}
+
+export interface VSEvents {
+
+}
+
+export interface PtyEvents {
+
 }

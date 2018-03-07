@@ -46,7 +46,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
 
         public Task ChangeWorkingDirectoryAsync(string newDirectory)
         {
-            return ((ServiceToolWindowControl)this.windowPane.Content).ChangeWorkingDirectoryAsync(newDirectory);
+            return this.windowPane.ChangeWorkingDirectoryAsync(newDirectory);
         }
 
         private class WindowFrameEvents: IVsWindowFrameNotify, IVsWindowFrameNotify2

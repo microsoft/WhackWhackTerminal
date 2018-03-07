@@ -6,16 +6,10 @@
     using System;
     using System.Threading.Tasks;
 
-    internal class TerminalEvent: JsonPortMarshaler
+    internal class ServiceHubTarget: JsonPortMarshaler
     {
-        private readonly TermWindowPackage package;
         private EventHandler<DataEventArgs> ptyDataEventHandler;
         private EventHandler<string> ptyExitedEventHandler;
-
-        public TerminalEvent(TermWindowPackage package)
-        {
-            this.package = package;
-        }
 
         [JsonRpcMethod("PtyData")]
         public void PtyData(string data)

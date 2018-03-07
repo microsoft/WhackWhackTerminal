@@ -1,8 +1,13 @@
 ﻿namespace Microsoft.VisualStudio.Terminal
 {
     using System;
+    using System.IO;
+    using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Windows;
+    using Microsoft.VisualStudio.ScriptedHost;
     using Microsoft.VisualStudio.Shell;
+    using StreamJsonRpc;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -19,6 +24,7 @@
     public class TermWindow : ToolWindowPane
     {
         public const string TermWindowGuidString = "f7090fd8-8163-4e9a-9616-45ff87e0816e";
+        private readonly ScriptedControl scriptedControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TermWindow"/> class.
@@ -29,7 +35,9 @@
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new TermWindowControl(context);
+
+
+            this.Content = new TerminalWindowControl(context);
         }
     }
 }

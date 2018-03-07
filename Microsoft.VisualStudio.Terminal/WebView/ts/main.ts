@@ -57,6 +57,9 @@ class HostMarshal implements Marshal {
     validateLocalLink(link: string): Microsoft.Plugin.Promise<boolean> {
         return this.marshal._call('validateLocalLink', link);
     }
+    sendFocus(): Microsoft.Plugin.Promise<void> {
+        return this.marshal._call('sendFocus');
+    }
 }
 
 Microsoft.Plugin.addEventListener('pluginready', async () => {

@@ -1,8 +1,14 @@
 ﻿namespace Microsoft.VisualStudio.Terminal
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Runtime.InteropServices;
+    using Microsoft.VisualStudio.ScriptedHost;
     using Microsoft.VisualStudio.Shell;
+    using StreamJsonRpc;
+    using Task = System.Threading.Tasks.Task;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -19,16 +25,40 @@
     public class ServiceToolWindow : ToolWindowPane
     {
         public const string ServiceToolWindowGuid = "ebfb63ec-6efd-4fb3-834f-e9da3a40f2a1";
+        private readonly ToolWindowContext context;
+        private ScriptedControl scriptedControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceToolWindow"/> class.
         /// </summary>
         public ServiceToolWindow(ToolWindowContext context) : base(null)
         {
-            // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
-            // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
-            // the object returned by the Content property.
-            this.Content = new ServiceToolWindowControl(context);
+            this.context = context;
+        }
+
+        internal void FinishInitialize(string workingDirectory, string shellPath, IEnumerable<string> args, IDictionary<string, string> env)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string daytonaRoot = Path.Combine(extensionDirectory, "WebView");
+            string daytonaManifest = Path.Combine(daytonaRoot, "daytona.json");
+            this.scriptedControl = new ScriptedControl(daytonaManifest, daytonaRoot, context.CommandService, context.CommandService);
+
+            var target = new ServiceHubTarget();
+            var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            var marshal = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils, workingDirectory, false, shellPath, args, env);
+            this.scriptedControl.PublishObject("hostmarshal", marshal);
+            this.scriptedControl.PublishObject("terminalEvents", target);
+
+            this.scriptedControl.GetFrameworkElement(out var scriptedControlElement);
+            this.Content = scriptedControlElement;
+        }
+
+        internal async Task ChangeWorkingDirectoryAsync(string workingDirectory)
+        {
+            await Task.Yield();
+            //await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            //this.terminalView.Invoke("triggerEvent", "directoryChanged", workingDirectory);
         }
     }
 }
