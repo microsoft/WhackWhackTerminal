@@ -7,6 +7,7 @@
     using System.Windows;
     using Microsoft.VisualStudio.ScriptedHost;
     using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Interop;
     using StreamJsonRpc;
 
     /// <summary>
@@ -36,8 +37,30 @@
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
 
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-            this.Content = new TerminalWindowControl(context);
+            string extensionDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string daytonaRoot = Path.Combine(extensionDirectory, "WebView");
+            string daytonaManifest = Path.Combine(daytonaRoot, "daytona.json");
+
+            this.scriptedControl = new ScriptedControl(daytonaManifest, daytonaRoot, context.CommandService, context.CommandService);
+
+            var target = new ServiceHubTarget();
+            var rpc = JsonRpc.Attach(context.ServiceHubStream, target);
+            var marshal = new TerminalScriptingObject(context.Package, rpc, context.SolutionUtils, null, true, null, null, null);
+
+            this.scriptedControl.PublishObject("hostmarshal", marshal);
+            this.scriptedControl.PublishObject("terminalEvents", target);
+
+            this.scriptedControl.GetFrameworkElement(out var scriptedControlElement);
+            this.Content = scriptedControlElement as UIElement;
+
+            this.scriptedControl.GotFocus += ScriptedControl_GotFocus;
+        }
+
+        private void ScriptedControl_GotFocus(object sender, EventArgs e)
+        {
+            ((IVsWindowFrame)this.Frame).Show();
         }
     }
 }
