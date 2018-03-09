@@ -16,7 +16,7 @@
         <PackageId>WhackWhackTerminal.Embeddable</PackageId>
     </PropertyGroup>
     <ItemGroup>
-      <Content Include="Microsoft.VisualStudio.Terminal.Embeddable.targets">
+      <Content Include="WhackWhackTerminal.Embeddable.targets">
         <PackagePath>build</PackagePath>
         <Pack>true</Pack>
       </Content>
