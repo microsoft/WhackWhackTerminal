@@ -4,7 +4,8 @@
         ptyData: '',
         ptyExited: '',
         directoryChanged: '',
-        focus: ''
+        focus: '',
+        resize: '',
     };
 
     export type EventType = keyof typeof eventStrings;
