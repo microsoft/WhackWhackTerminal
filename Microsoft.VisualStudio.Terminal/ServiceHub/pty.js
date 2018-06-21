@@ -20,6 +20,7 @@ function ServicePty(stream, _host) {
     this.connection.onRequest('termData', (data) => this.termData(data));
     this.connection.onRequest('resizeTerm', (cols, rows) => this.resizeTerm(cols, rows));
     this.connection.onRequest('closeTerm', () => this.closeTerm());
+    this.connection.onClose(() => this.closeTerm());
     this.connection.listen();
 }
 

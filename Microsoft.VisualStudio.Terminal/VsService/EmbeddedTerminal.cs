@@ -1,102 +1,169 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
+using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
+using StreamJsonRpc;
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.Terminal.VsService
 {
-    public class EmbeddedTerminal : ITerminal
+    internal sealed class EmbeddedTerminal : TerminalRenderer
     {
-        private readonly TermWindowPackage package;
-        private readonly ServiceToolWindow windowPane;
+        private readonly EmbeddedTerminalOptions options;
+        private readonly AsyncLazy<JsonRpc> rpc;
+        private readonly AsyncLazy<SolutionUtils> solutionUtils;
+        private bool isRpcDisconnected;
 
-        public event EventHandler Closed;
-
-        public EmbeddedTerminal(TermWindowPackage package, ServiceToolWindow windowPane)
+        public EmbeddedTerminal(TermWindowPackage package, TermWindowPane pane, EmbeddedTerminalOptions options, Task<Stream> rpcStreamTask) : base(package, pane)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            this.package = package;
-            this.windowPane = windowPane;
+            this.options = options;
+            this.rpc = new AsyncLazy<JsonRpc>(() => GetJsonRpcAsync(rpcStreamTask), package.JoinableTaskFactory);
 
-            if (this.windowPane.Frame is IVsWindowFrame2 windowFrame)
+            if (options.WorkingDirectory == null)
             {
-                var events = new WindowFrameEvents(windowFrame, this);
-                windowFrame.Advise(events, out var cookie);
-                events.Cookie = cookie;
+                // Use solution directory
+                this.solutionUtils = new AsyncLazy<SolutionUtils>(GetSolutionUtilsAsync, package.JoinableTaskFactory);
+
+                // Start getting solution utils but don't block on the result.
+                // Solution utils need MEF and sometimes it takes long time to initialize.
+                this.solutionUtils.GetValueAsync().FileAndForget("WhackWhackTerminal/GetSolutionUtils");
             }
         }
 
-        public async Task CloseAsync()
+        protected internal override string SolutionDirectory =>
+            this.options.WorkingDirectory ?? this.package.JoinableTaskFactory.Run(() => GetSolutionDirectoryAsync(this.package.DisposalToken));
+
+        internal protected override void OnTerminalResized(int cols, int rows)
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            (this.windowPane.Frame as IVsWindowFrame)?.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+            base.OnTerminalResized(cols, rows);
+            ResizeTermAsync(cols, rows).FileAndForget("WhackWhackTerminal/ResizePty");
         }
 
-        public async Task HideAsync()
+        internal protected override void OnTerminalDataRecieved(string data)
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            (this.windowPane.Frame as IVsWindowFrame)?.Hide();
+            base.OnTerminalDataRecieved(data);
+            SendTermDataAsync(data).FileAndForget("WhackWhackTerminal/TermData");
         }
 
-        public async Task ShowAsync()
+        internal protected override void OnTerminalClosed()
         {
-            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync();
-            (this.windowPane.Frame as IVsWindowFrame)?.Show();
+            base.OnTerminalClosed();
+            CloseTermAsync().FileAndForget("WhackWhackTerminal/closeTerm");
         }
 
-        public Task ChangeWorkingDirectoryAsync(string newDirectory)
+        protected override void OnClosed()
         {
-            return ((ServiceToolWindowControl)this.windowPane.Content).ChangeWorkingDirectoryAsync(newDirectory);
+            base.OnClosed();
+            CloseRpcAsync().FileAndForget("WhackWhackTerminal/closeRpc");
         }
 
-        private class WindowFrameEvents: IVsWindowFrameNotify, IVsWindowFrameNotify2
+        internal protected override void OnTerminalInit(object sender, TermInitEventArgs e)
         {
-            private readonly IVsWindowFrame2 frame;
-            private EmbeddedTerminal terminal;
+            base.OnTerminalInit(sender, e);
+            InitTermAsync(e).FileAndForget("WhackWhackTerminal/InitPty");
+        }
 
-            public WindowFrameEvents(IVsWindowFrame2 frame, EmbeddedTerminal terminal)
+        private async Task<JsonRpc> GetJsonRpcAsync(Task<Stream> rpcStreamTask)
+        {
+            var stream = await rpcStreamTask;
+            var target = new TerminalEvent(this.package, this);
+            return JsonRpc.Attach(stream, target);
+        }
+
+        private async Task ResizeTermAsync(int cols, int rows)
+        {
+            var rpc = await this.rpc.GetValueAsync();
+            if (!this.isRpcDisconnected)
             {
-                this.frame = frame;
+                await rpc.InvokeAsync("resizeTerm", cols, rows);
+            }
+        }
+
+        private async Task SendTermDataAsync(string data)
+        {
+            var rpc = await this.rpc.GetValueAsync();
+            if (!this.isRpcDisconnected)
+            {
+                await rpc.InvokeAsync("termData", data);
+            }
+        }
+
+        private async Task CloseTermAsync()
+        {
+            var rpc = await this.rpc.GetValueAsync();
+            if (!this.isRpcDisconnected)
+            {
+                await rpc.InvokeAsync("closeTerm");
+            }
+        }
+
+        private async Task CloseRpcAsync()
+        {
+            var rpc = await this.rpc.GetValueAsync();
+            rpc.Dispose();
+            this.isRpcDisconnected = true;
+        }
+
+        private async Task InitTermAsync(TermInitEventArgs e)
+        {
+            var rpc = await this.rpc.GetValueAsync();
+            if (!this.isRpcDisconnected)
+            {
+                var path = this.options.ShellPath ??
+                    (this.package.OptionTerminal == DefaultTerminal.Other ? this.package.OptionShellPath : this.package.OptionTerminal.ToString());
+                var args = ((object)this.options.Args) ?? this.package.OptionStartupArgument;
+                await rpc.InvokeAsync("initTerm", path, e.Cols, e.Rows, e.Directory, args, this.options.Environment);
+            }
+        }
+
+        private async Task<SolutionUtils> GetSolutionUtilsAsync()
+        {
+            await this.package.JoinableTaskFactory.SwitchToMainThreadAsync(this.package.DisposalToken);
+            var solutionService = (IVsSolution)await this.package.GetServiceAsync(typeof(SVsSolution));
+            var componentModel = (IComponentModel)await this.package.GetServiceAsync(typeof(SComponentModel));
+            var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
+            var result = new SolutionUtils(solutionService, workspaceService, this.package.JoinableTaskFactory);
+            result.SolutionChanged += (sender, solutionDir) =>
+            {
+                if (package.OptionChangeDirectory)
+                {
+                    this.ChangeWorkingDirectoryAsync(solutionDir).FileAndForget("WhackWhackTerminal/changeWorkingDirectory");
+                }
+            };
+
+            return result;
+        }
+
+        private async Task<string> GetSolutionDirectoryAsync(CancellationToken cancellationToken)
+        {
+            var solutionUtils = await this.solutionUtils.GetValueAsync(cancellationToken);
+            return await solutionUtils.GetSolutionDirAsync(cancellationToken) ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        // RPC event target
+        internal sealed class TerminalEvent
+        {
+            private readonly TermWindowPackage package;
+            private readonly EmbeddedTerminal terminal;
+
+            public TerminalEvent(TermWindowPackage package, EmbeddedTerminal terminal)
+            {
+                this.package = package;
                 this.terminal = terminal;
             }
 
-            public uint? Cookie
-            {
-                get;
-                set;
-            }
+            [JsonRpcMethod("PtyData")]
+            public Task PtyDataAsync(string data) =>
+                this.terminal.PtyDataAsync(data, this.package.DisposalToken);
 
-            public int OnClose(ref uint pgrfSaveOptions)
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                terminal.Closed?.Invoke(terminal, EventArgs.Empty);
-
-                if (this.Cookie.HasValue)
-                {
-                    this.frame?.Unadvise(this.Cookie.Value);
-                }
-                return VSConstants.S_OK;
-            }
-
-            public int OnShow(int fShow)
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnMove()
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnSize()
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnDockableChange(int fDockable)
-            {
-                return VSConstants.S_OK;
-            }
+            [JsonRpcMethod("PtyExit")]
+            public Task PtyExitAsync(int? code) =>
+                this.terminal.PtyExitedAsync(code, this.package.DisposalToken);
         }
     }
 }

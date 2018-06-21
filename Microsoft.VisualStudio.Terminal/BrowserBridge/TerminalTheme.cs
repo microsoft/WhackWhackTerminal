@@ -137,5 +137,12 @@ namespace Microsoft.VisualStudio.Terminal
             get;
             set;
         }
+
+        [DataMember(Name = "border")]
+        public string Border
+        {
+            get;
+            set;
+        }
     }
 }
