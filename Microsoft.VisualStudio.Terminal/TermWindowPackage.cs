@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Microsoft.ServiceHub.Client;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Terminal.VsService;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Terminal.VsService;
-using Microsoft.ServiceHub.Client;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.Terminal
@@ -36,7 +34,7 @@ namespace Microsoft.VisualStudio.Terminal
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(TermWindow), Style = VsDockStyle.Tabbed, Window = "34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3")]
-    [ProvideToolWindow(typeof(ServiceToolWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = TermWindow.TermWindowGuidString)]
+    [ProvideToolWindow(typeof(RendererWindow), Transient = true, MultiInstances = true, Style = VsDockStyle.Tabbed, Window = TermWindow.ToolWindowGuid)]
     [ProvideOptionPage(typeof(TerminalOptionPage), "Whack Whack Terminal", "General", 0, 0, true)]
     [ProvideService(typeof(STerminalService), IsAsyncQueryable = true)]
     public sealed class TermWindowPackage : AsyncPackage
@@ -47,6 +45,7 @@ namespace Microsoft.VisualStudio.Terminal
         public const string PackageGuidString = "35b633bd-cdfb-4eda-8c26-f557e419eb8a";
 
         private IVsSettingsManager settingsManager;
+        private int nextToolWindowId = 1;
 
         /// <summary> 
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -55,56 +54,59 @@ namespace Microsoft.VisualStudio.Terminal
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
+
             this.AddService(typeof(STerminalService), CreateServiceAsync, promote: true);
 
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
-
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            this.settingsManager = (IVsSettingsManager)await this.GetServiceAsync(typeof(SVsSettingsManager));
             await TermWindowCommand.InitializeCommandAsync(this);
         }
 
-        private Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType)
+        private Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType) =>
+            Task.FromResult<object>(new EmbeddedTerminalService(this));
+
+        public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType) =>
+            toolWindowType == new Guid(TermWindow.ToolWindowGuid) || toolWindowType == new Guid(RendererWindow.ToolWindowGuid) ? this : null;
+
+        protected override string GetToolWindowTitle(Type toolWindowType, int id) =>
+            typeof(TermWindowPane).IsAssignableFrom(toolWindowType) ? "Terminal Window" : base.GetToolWindowTitle(toolWindowType, id);
+
+        protected override Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken) =>
+            Task.FromResult(typeof(TermWindowPane).IsAssignableFrom(toolWindowType) ? this : ToolWindowCreationContext.Unspecified);
+
+        internal async Task<EmbeddedTerminal> CreateTerminalAsync(EmbeddedTerminalOptions options, TermWindowPane pane)
         {
-            return Task.FromResult((object)new EmbeddedTerminalService(this));
+            var rpcStreamTask = JoinableTaskFactory.RunAsync(async () =>
+            {
+                var client = new HubClient();
+                return await client.RequestServiceAsync("wwt.pty", DisposalToken);
+            });
+
+            pane = pane ?? await CreateToolWindowAsync(options.Name);
+
+            var result = new EmbeddedTerminal(this, pane, options, rpcStreamTask.Task);
+            await result.InitAsync(DisposalToken);
+            return result;
         }
 
-        public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)
+        internal async Task<TerminalRenderer> CreateTerminalRendererAsync(string name)
         {
-            if (toolWindowType.Equals(new Guid(TermWindow.TermWindowGuidString)) || toolWindowType.Equals(new Guid(ServiceToolWindow.ServiceToolWindowGuid)))
-            {
-                return this;
-            }
-
-            return null;
+            var pane = await CreateToolWindowAsync(name);
+            var result = new TerminalRenderer(this, pane);
+            await result.InitAsync(DisposalToken);
+            return result;
         }
 
-        protected override string GetToolWindowTitle(Type toolWindowType, int id)
+        private async Task<RendererWindow> CreateToolWindowAsync(string name)
         {
-            if (toolWindowType == typeof(TermWindow) || toolWindowType == typeof(ServiceToolWindow))
-            {
-                return "Terminal Window";
-            }
-
-            return base.GetToolWindowTitle(toolWindowType, id);
-        }
-
-        protected override async Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
-        {
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync();
-            var solutionService = (IVsSolution)await this.GetServiceAsync(typeof(SVsSolution));
-            var componentModel = (IComponentModel)await this.GetServiceAsync(typeof(SComponentModel));
-            var workspaceService = componentModel.GetService<IVsFolderWorkspaceService>();
-            var solutionUtils = new SolutionUtils(solutionService, workspaceService);
-
-            var client = new HubClient();
-            var clientStream = await client.RequestServiceAsync("wwt.pty");
-            return new ToolWindowContext()
-            {
-                Package = this,
-                ServiceHubStream = clientStream,
-                SolutionUtils = solutionUtils,
-            };
+            await JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
+            var pane = (RendererWindow)await FindToolWindowAsync(
+                typeof(RendererWindow),
+                nextToolWindowId++,
+                create: true,
+                cancellationToken: DisposalToken);
+            pane.Caption = name;
+            return pane;
         }
 
         public DefaultTerminal OptionTerminal

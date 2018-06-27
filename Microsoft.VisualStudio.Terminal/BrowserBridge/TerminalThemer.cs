@@ -63,6 +63,7 @@ namespace Microsoft.VisualStudio.Terminal
             theme.Background = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxBackgroundColorKey));
             theme.Foreground = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxContentTextColorKey));
             theme.Cursor = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxContentTextColorKey));
+            theme.Border = ColorTranslator.ToHtml(VSColorTheme.GetThemedColor(EnvironmentColors.ToolboxDisabledContentTextColorKey));
             return JsonConvert.SerializeObject(theme);
         }
     }

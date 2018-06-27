@@ -1,5 +1,5 @@
 ﻿import { ITheme, Terminal } from 'xterm';
-import { fit } from 'xterm/lib/addons/fit';
+import { apply as applyFit } from 'xterm/lib/addons/fit';
 import { VisualStudio } from './VsEventManager';
 import { registerLocalLinkHandler } from './TerminalLinkMatcher';
 
@@ -10,11 +10,21 @@ import * as xterm from 'xterm';
 const TerminalConstructor = xterm as any as (typeof Terminal);
 
 export class TermView {
+    private autoFit: boolean;
     private term: Terminal;
+    private termFit: TerminalFit;
     private resizeTimeout: number | null;
     private solutionDirectory: string;
+
+    private borderStyle: HTMLElement;
+    private backgroundColor: string;
+    private borderColor: string;
+
     constructor(theme: ITheme, fontFamily: string, fontSize: number, solutionDirectory: string) {
         this.solutionDirectory = solutionDirectory;
+        this.autoFit = true;
+        applyFit(TerminalConstructor);
+
         this.term = new TerminalConstructor({
             theme: theme,
             fontFamily: fontFamily + ', courier-new, courier, monospace',
@@ -23,9 +33,19 @@ export class TermView {
             cols: 80,
             rows: 24
         });
+        this.termFit = <any>this.term;
 
-        this.term.open(document.getElementById('content'));
-        fit(this.term);
+        this.backgroundColor = theme.background;
+        this.borderColor = (<any>theme).border || theme.foreground;
+
+        const content = document.getElementById('content');
+
+        this.borderStyle = document.createElement('style');
+        this.updateBorder();
+        content.appendChild(this.borderStyle);
+
+        this.term.open(content);
+        this.termFit.fit();
         this.term.on('data', (data) => this.termData(data));
         VisualStudio.Events.on('ptyData', (data) => this.ptyData(data));
         VisualStudio.Events.on('themeChanged', (data) => {
@@ -48,10 +68,29 @@ export class TermView {
         VisualStudio.Events.on('focus', () => {
             this.term.focus();
         });
+        VisualStudio.Events.on('resize', data => {
+            const size: Geometry = JSON.parse(data);
+            if (size) {
+                const borderChanging = this.autoFit;
+                this.autoFit = false;
+                if (borderChanging) {
+                    this.updateBorder();
+                }
+
+                this.resizeTerm(size);
+            }
+        });
         window.addEventListener("resize", () => this.resizeHandler())
         this.registerKeyboardHandlers();
         this.initPty(solutionDirectory);
         registerLocalLinkHandler(this.term);
+    }
+
+    private resizeTerm(size: Geometry) {
+        if (this.term.cols !== size.cols || this.term.rows !== size.rows) {
+            (<any>this.term).renderer.clear();
+            this.term.resize(size.cols, size.rows);
+        }
     }
 
     private initPty(cwd: string) {
@@ -72,12 +111,21 @@ export class TermView {
 
     private setTheme(theme: ITheme) {
         this.term.setOption('theme', theme);
+        this.backgroundColor = theme.background;
+        this.borderColor = (<any>theme).border || theme.foreground;
+        this.updateBorder();
     }
 
     private resizeHandler() {
         let actualHandler = () => {
-            fit(this.term);
-            window.external.ResizePty(this.term.cols, this.term.rows);
+            const size: Geometry = this.termFit.proposeGeometry();
+            if (size) {
+                if (this.autoFit) {
+                    this.resizeTerm(size);
+                }
+
+                window.external.ResizePty(size.cols, size.rows);
+            }
         };
 
         let timeoutCallback = () => {
@@ -112,5 +160,17 @@ export class TermView {
                 this.termData(content);
             }
         });
+    }
+
+    private updateBorder() {
+        this.borderStyle.innerHTML = this.autoFit ? '' :
+            '.xterm-screen { ' +
+                'border-style: dotted; ' +
+                'border-width: 1px; ' +
+                `border-top-color: ${this.backgroundColor}; ` +
+                `border-bottom-color: ${this.borderColor}; ` +
+                `border-left-color: ${this.backgroundColor}; ` +
+                `border-right-color: ${this.borderColor}` +
+            '}';
     }
 }

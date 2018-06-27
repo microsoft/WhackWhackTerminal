@@ -1,8 +1,11 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Workspace.VSIntegration;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.Terminal
@@ -11,12 +14,14 @@ namespace Microsoft.VisualStudio.Terminal
     {
         private readonly IVsSolution solutionService;
         private readonly IVsWorkspaceFactory workspaceService;
+        private readonly JoinableTaskFactory jtf;
 
-        public SolutionUtils(IVsSolution solutionService, IVsWorkspaceFactory workspaceService)
+        public SolutionUtils(IVsSolution solutionService, IVsWorkspaceFactory workspaceService, JoinableTaskFactory jtf)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             this.solutionService = solutionService;
             this.workspaceService = workspaceService;
+            this.jtf = jtf;
 
             var events = new SolutionEvents(solutionService, this);
             this.solutionService.AdviseSolutionEvents(events, out var cookie);
@@ -25,9 +30,10 @@ namespace Microsoft.VisualStudio.Terminal
             this.workspaceService.OnActiveWorkspaceChanged += WorkspaceChangedAsync;
         }
 
-        public string GetSolutionDir()
+        public async Task<string> GetSolutionDirAsync(CancellationToken cancellationToken)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await this.jtf.SwitchToMainThreadAsync(cancellationToken);
+
             this.solutionService.GetSolutionInfo(out var solutionDir, out _, out _);
 
             // solution may sometimes be null in an open folder scenario.

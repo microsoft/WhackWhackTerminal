@@ -39,6 +39,8 @@ namespace Microsoft.VisualStudio.Terminal
             this.Content = host;
         }
 
+        public bool HasDocument => this.browser.Document != null;
+
         private void Browser_PreviewKeyDown(object sender, System.Windows.Forms.PreviewKeyDownEventArgs e)
         {
             // Forces the terminal to capture the shortcut instead of sending it to VS
@@ -77,7 +79,7 @@ namespace Microsoft.VisualStudio.Terminal
 
         public object Invoke(string scriptName, params object[] args)
         {
-            return this.browser.Document.InvokeScript(scriptName, args);
+            return this.browser.Document?.InvokeScript(scriptName, args);
         }
 
         private void Browser_DocumentCompleted(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
