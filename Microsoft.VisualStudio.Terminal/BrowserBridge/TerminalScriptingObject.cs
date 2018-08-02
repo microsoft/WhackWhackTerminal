@@ -22,7 +22,7 @@ namespace Microsoft.VisualStudio.Terminal
 
         public event EventHandler<TermInitEventArgs> TerminalInit;
 
-        public string GetTheme() => TerminalThemer.GetTheme();
+        public string GetTheme() => "foo";
 
         public string GetFontFamily() => this.package.OptionFontFamily;
 

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Windows.Media;
 
 namespace Microsoft.VisualStudio.Terminal
 {
@@ -6,140 +7,140 @@ namespace Microsoft.VisualStudio.Terminal
     public class TerminalTheme
     {
         [DataMember(Name = "foreground")]
-        public string Foreground
+        public Color Foreground
         {
             get;
             set;
         }
 
         [DataMember(Name = "background")]
-        public string Background
+        public Color Background
         {
             get;
             set;
         }
 
         [DataMember(Name = "cursor")]
-        public string Cursor
+        public Color Cursor
         {
             get;
             set;
         }
 
         [DataMember(Name = "black")]
-        public string Black
+        public Color Black
         {
             get;
             set;
         }
 
         [DataMember(Name = "red")]
-        public string Red
+        public Color Red
         {
             get;
             set;
         }
 
         [DataMember(Name = "green")]
-        public string Green
+        public Color Green
         {
             get;
             set;
         }
 
         [DataMember(Name = "yellow")]
-        public string Yellow
+        public Color Yellow
         {
             get;
             set;
         }
 
         [DataMember(Name = "blue")]
-        public string Blue
+        public Color Blue
         {
             get;
             set;
         }
 
         [DataMember(Name = "magenta")]
-        public string Magenta
+        public Color Magenta
         {
             get;
             set;
         }
 
         [DataMember(Name = "cyan")]
-        public string Cyan
+        public Color Cyan
         {
             get;
             set;
         }
 
         [DataMember(Name = "white")]
-        public string White
+        public Color White
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightBlack")]
-        public string BrightBlack
+        public Color BrightBlack
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightRed")]
-        public string BrightRed
+        public Color BrightRed
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightGreen")]
-        public string BrightGreen
+        public Color BrightGreen
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightYellow")]
-        public string BrightYellow
+        public Color BrightYellow
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightBlue")]
-        public string BrightBlue
+        public Color BrightBlue
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightMagenta")]
-        public string BrightMagenta
+        public Color BrightMagenta
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightCyan")]
-        public string BrightCyan
+        public Color BrightCyan
         {
             get;
             set;
         }
 
         [DataMember(Name = "brightWhite")]
-        public string BrightWhite
+        public Color BrightWhite
         {
             get;
             set;
         }
 
         [DataMember(Name = "border")]
-        public string Border
+        public Color Border
         {
             get;
             set;

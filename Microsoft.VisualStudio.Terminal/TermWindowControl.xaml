@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Microsoft.VisualStudio.Terminal"
 			 xmlns:platformui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-	         x:Class="Microsoft.VisualStudio.Terminal.TermWindowControl"
+    xmlns:vtsharp="clr-namespace:VTSharp;assembly=VTSharp"
+    x:Class="Microsoft.VisualStudio.Terminal.TermWindowControl"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              x:Name="MyToolWindow">
-    <Grid x:Name="mainGrid">
-        <local:BetterBrowser x:Name="terminalView" />
-    </Grid>
+    <vtsharp:AnsiTerminal Name="ansiTerminal" TerminalResized="AnsiTerminal_TerminalResized" UserInput="AnsiTerminal_UserInput" RendererLoaded="AnsiTerminal_RendererLoaded"></vtsharp:AnsiTerminal>
+
 </UserControl>

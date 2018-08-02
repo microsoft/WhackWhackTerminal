@@ -28,8 +28,24 @@ namespace Microsoft.VisualStudio.Terminal.VsService
                 };
             }
 
-            this.scriptingObject = new TerminalScriptingObject(this, package);
-            this.scriptingObject.TerminalInit += OnTerminalInit;
+            this.Control.TermData += Control_TermData;
+            this.Control.TermResize += Control_TermResize;
+            this.Control.TermInit += Control_TermInit;
+        }
+
+        private void Control_TermInit(TermInitEventArgs obj)
+        {
+            this.OnTerminalInit(this, obj);
+        }
+
+        private void Control_TermResize(object arg1, (int row, int col) arg2)
+        {
+            this.OnTerminalResized(arg2.col, arg2.row);
+        }
+
+        private void Control_TermData(object arg1, string arg2)
+        {
+            this.OnTerminalDataRecieved(arg2);
         }
 
         public event EventHandler<TermInitEventArgs> TerminalInit;
