@@ -2,6 +2,7 @@ branches:
   only:
     - master
     - develop
+    -dev/dagriffe/science-fair
 
 image: Visual Studio 2017
 
