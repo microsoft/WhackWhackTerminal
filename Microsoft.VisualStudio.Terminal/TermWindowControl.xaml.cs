@@ -22,6 +22,7 @@ namespace Microsoft.VisualStudio.Terminal
     {
         private readonly TermWindowPackage package;
         private bool pendingFocus;
+        private TerminalScriptingObject scriptingObject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceToolWindowControl"/> class.
@@ -39,7 +40,7 @@ namespace Microsoft.VisualStudio.Terminal
 
         private void AnsiTerminal_RendererLoaded(object sender, (int row, int col) dimensions)
         {
-            var args = new TermInitEventArgs(dimensions.col, dimensions.row, "C:\\Users\\micro");
+            var args = new TermInitEventArgs(dimensions.col, dimensions.row, scriptingObject.GetSolutionDir());
             //this.ansiTerminal.SetPalette(TerminalThemer.GetTheme());
             this.TermInit?.Invoke(args);
         }
@@ -60,12 +61,17 @@ namespace Microsoft.VisualStudio.Terminal
 
         internal void PtyData(string data)
         {
-            this.ansiTerminal.ConsumePtyData(data);
+            (this.Content as AnsiTerminal)?.ConsumePtyData(data);
         }
 
         internal async Task InitAsync(TerminalScriptingObject scriptingObject, CancellationToken cancellationToken)
         {
-
+            this.scriptingObject = scriptingObject;
+            var term =  new AnsiTerminal();
+            term.RendererLoaded += AnsiTerminal_RendererLoaded;
+            term.TerminalResized += AnsiTerminal_TerminalResized;
+            term.UserInput += AnsiTerminal_UserInput;
+            this.Content = term;
         }
 
         internal void Resize(int cols, int rows) { }

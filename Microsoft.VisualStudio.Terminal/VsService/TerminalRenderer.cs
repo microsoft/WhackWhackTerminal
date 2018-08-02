@@ -27,6 +27,7 @@ namespace Microsoft.VisualStudio.Terminal.VsService
                     Closed = (sender, e) => OnClosed(),
                 };
             }
+            this.scriptingObject = new TerminalScriptingObject(this, package);
 
             this.Control.TermData += Control_TermData;
             this.Control.TermResize += Control_TermResize;

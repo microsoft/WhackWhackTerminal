@@ -10,6 +10,5 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              x:Name="MyToolWindow">
-    <vtsharp:AnsiTerminal Name="ansiTerminal" TerminalResized="AnsiTerminal_TerminalResized" UserInput="AnsiTerminal_UserInput" RendererLoaded="AnsiTerminal_RendererLoaded"></vtsharp:AnsiTerminal>
 
 </UserControl>
