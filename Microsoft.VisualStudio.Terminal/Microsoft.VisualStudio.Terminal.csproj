@@ -115,6 +115,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="VTSharp.dll" />
     <Content Include="WebView\default.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -317,7 +318,7 @@
       <HintPath>..\packages\VtNetCore.1.0.15\lib\netstandard2.0\VtNetCore.dll</HintPath>
     </Reference>
     <Reference Include="VTSharp">
-      <HintPath>..\..\Term.NET\VTSharp\bin\Debug\VTSharp.dll</HintPath>
+      <HintPath>VTSharp.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
