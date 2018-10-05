@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2] - 2018-10-5
+### Fixed
+- Terminal now behaves mostly correctly on HiDPI displays.
+
+## [1.1.3] - 2018-6-27
+### Added
+- Terminal renderer API
+
 ## [1.0] - 2018-3-5
 ### Added
 - Service API
@@ -75,7 +83,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # 0.2.0 - 2017-7-25
 - Initial MVP release
 
-
+[1.1.3]: https://github.com/Microsoft/WhackWhackTerminal/compare/v1,0...v1.1.3
 [1.0]: https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.8...v1.0
 [0.2.8]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.7...v0.2.8
 [0.2.7]:https://github.com/Microsoft/WhackWhackTerminal/compare/v0.2.6...v0.2.7
