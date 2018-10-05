@@ -87,8 +87,9 @@ export class TermView {
     }
 
     private resizeTerm(size: Geometry) {
-        if (this.term.cols !== size.cols || this.term.rows !== size.rows) {        
-                this.term.resize(size.cols, size.rows);
+        if (this.term.cols !== size.cols || this.term.rows !== size.rows) {
+            (<any>this.term)._core.renderer.clear();
+            this.term.resize(size.cols, size.rows);
         }
     }
 
