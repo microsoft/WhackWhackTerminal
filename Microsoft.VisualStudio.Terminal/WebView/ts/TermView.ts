@@ -1,5 +1,5 @@
 ﻿import { ITheme, Terminal } from 'xterm';
-import { apply as applyFit } from 'xterm/lib/addons/fit';
+import { apply as applyFit } from 'xterm/lib/addons/fit/fit';
 import { VisualStudio } from './VsEventManager';
 import { registerLocalLinkHandler } from './TerminalLinkMatcher';
 
@@ -88,7 +88,7 @@ export class TermView {
 
     private resizeTerm(size: Geometry) {
         if (this.term.cols !== size.cols || this.term.rows !== size.rows) {
-            (<any>this.term).renderer.clear();
+            (<any>this.term)._core.renderer.clear();
             this.term.resize(size.cols, size.rows);
         }
     }

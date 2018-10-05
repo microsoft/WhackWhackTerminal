@@ -12,7 +12,7 @@ You need the following components installed in order to build WhackWhackTerminal
 Once you have the prerequisites you can begin setting up your project to build.
 1. Open a terminal window.
 2. Run `npm config set msvs_version 2015`
-3. Navigate to the EmbbededTerminal project directory
+3. Navigate to the Microsoft.VisualStudio.Terminal project directory
 4. Run `npm install`
 
 After this you can simply open the solution file in Visual Studio and hit f5 to start debugging.

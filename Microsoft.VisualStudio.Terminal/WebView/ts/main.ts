@@ -8,17 +8,26 @@ triggerEvent = function (event: string, data: any) {
 };
 
 if (document.readyState !== 'loading') {
+    let fontSizeFixingElement = document.createElement('div');
+    fontSizeFixingElement.style.fontSize = `${window.external.GetFontSize()}pt`;
+
+    let fontSize = parseInt(window.getComputedStyle(fontSizeFixingElement).fontSize);
     let termView = new TermView(
         JSON.parse(window.external.GetTheme()),
         window.external.GetFontFamily(),
-        window.external.GetFontSize(),
+        fontSize,
         window.external.GetSolutionDir());
 } else {
     document.addEventListener("DOMContentLoaded", function (event) {
+        let fontSizeFixingElement = document.createElement('div');
+        fontSizeFixingElement.style.fontSize = `${window.external.GetFontSize()}pt`;
+
+        let fontSize = parseInt(window.getComputedStyle(fontSizeFixingElement).fontSize);
+
         let termView = new TermView(
             JSON.parse(window.external.GetTheme()),
             window.external.GetFontFamily(),
-            window.external.GetFontSize(),
+            fontSize,
             window.external.GetSolutionDir());
     });
 }
