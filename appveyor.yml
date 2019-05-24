@@ -10,6 +10,7 @@ install:
   - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 before_build:
+  - cd src
   - nuget restore -Verbosity quiet
 
 build_script:
@@ -19,10 +20,10 @@ build_script:
   - msbuild .\TermWindow.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m /t:build
 
 deploy_script:
-  - ps: If ($env:APPVEYOR_REPO_BRANCH -Match "develop") { Vsix-PublishToGallery -path '.\Microsoft.VisualStudio.Terminal\**\*.vsix' }
+  - ps: If ($env:APPVEYOR_REPO_BRANCH -Match "develop") { Vsix-PublishToGallery -path '.\bin\**\Microsoft.VisualStudio.Terminal\**\*.vsix' }
 
 artifacts:
-  - path: '.\Microsoft.VisualStudio.Terminal\**\*.vsix'
+  - path: '.\bin\**\Microsoft.VisualStudio.Terminal\**\*.vsix'
     name: WhackWhackTerminal
-  - path: '.\Microsoft.VisualStudio.Terminal.Embeddable\**\*.nupkg'
+  - path: '.\bin\**\Microsoft.VisualStudio.Terminal.Embeddable\**\*.nupkg'
     name: NuGet Package
