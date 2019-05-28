@@ -4,9 +4,9 @@
   "description": "embedded terminal ui in VS",
   "author": "Daniel Griffen",
   "dependencies": {
-    "node-pty": "^0.7.2",
+    "node-pty": "0.9.0-beta14",
     "requirejs": "^2.3.5",
-    "vscode-jsonrpc": "^3.5.0",
-    "xterm": "=3.7.0"
+    "vscode-jsonrpc": "4.0.0",
+    "xterm": "3.13.2"
   }
 }
