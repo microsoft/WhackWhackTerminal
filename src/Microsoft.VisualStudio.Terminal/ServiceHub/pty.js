@@ -51,7 +51,7 @@ ServicePty.prototype.initTerm = function (shell, cols, rows, startDir, args, env
         rows: rows,
         cwd: startDir,
         env: mergedEnvironment,
-		experimentalUseConpty: false,
+		experimentalUseConpty: true,
     });
 
     this.ptyConnection.on('data', (data) => this.connection.sendRequest('PtyData', [data]));
