@@ -1,0 +1,159 @@
+﻿<Project>
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+  
+  <PropertyGroup>
+    <DefaultTypescriptIncludePattern />
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleResolution>Node</TypeScriptModuleResolution>
+    <TypeScriptToolsVersion>3.5</TypeScriptToolsVersion>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptOutDir>$(BaseOutputPath)\$(Configuration)\js</TypeScriptOutDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.VisualStudio.Terminal</RootNamespace>
+    <AssemblyName>WhackWhackTerminal</AssemblyName>
+    <UseCodebase>true</UseCodebase>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Page Include="**\*.xaml" Exclude="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="VSPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <VSCTCompile Include="TermWindowPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <TypeScriptCompile Include="WebView\ts\external.d.ts" />
+    <TypeScriptCompile Include="WebView\ts\main.ts" />
+    <TypeScriptCompile Include="WebView\ts\TerminalFit.d.ts" />
+    <TypeScriptCompile Include="WebView\ts\TerminalLinkMatcher.ts" />
+    <TypeScriptCompile Include="WebView\ts\TermView.ts" />
+    <TypeScriptCompile Include="WebView\ts\VsEventManager.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="BrandWhackWhackTerminal_256x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="WebView\default.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="ServiceHub\pty.js">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Key.snk" />
+    <Content Include="ServiceHub\wwt.pty.servicehub.service.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="package-lock.json" />
+    <None Include="package.json" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WebView\default.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="node_modules\**" />
+    <EmbeddedResource Remove="node_modules\**" />
+    <None Remove="node_modules\**" />
+    <Page Remove="node_modules\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ServiceHub.Client" Version="1.2.56" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.9.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Workspace" Version="15.0.485" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.9.3039" />
+    <PackageReference Include="Unofficial.Microsoft.mshtml" Version="7.0.3300" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.VisualStudio.Terminal.Embeddable\Microsoft.VisualStudio.Terminal.Embeddable.csproj" />
+  </ItemGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" />
+ 
+  <Target Name="AddTsToContent" AfterTargets="CompileTypeScript" Condition="'$(BuildingProject)' != 'false'">
+    <ItemGroup>
+      <Content Include="@(GeneratedJavascript)">
+        <IncludeInVSIX>true</IncludeInVSIX>
+        <VSIXSubPath>WebView</VSIXSubPath>
+      </Content>
+      <Content Include="node_modules\node-pty\*;node_modules\node-pty\lib\**\*;node_modules\node-pty\build\Release\**\*" Exclude="node_modules\node-pty\build\Release\**\*.pdb">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\vscode-jsonrpc\**\*">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\addons\fit\fit.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\xterm.css">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\xterm\dist\xterm.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+      <Content Include="node_modules\requirejs\require.js">
+        <IncludeInVSIX>true</IncludeInVSIX>
+      </Content>
+    </ItemGroup>
+  </Target>
+</Project>

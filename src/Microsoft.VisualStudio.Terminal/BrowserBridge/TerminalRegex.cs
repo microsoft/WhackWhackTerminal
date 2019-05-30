@@ -94,7 +94,7 @@ namespace Microsoft.VisualStudio.Terminal
             var regex = new Regex("^[a-zA-Z]:");
             if (!regex.IsMatch(path))
             {
-                IVsSolution solutionService = (IVsSolution)Package.GetGlobalService(typeof(SVsSolution));
+                IVsSolution solutionService = (IVsSolution)Shell.Package.GetGlobalService(typeof(SVsSolution));
                 solutionService.GetSolutionInfo(out string solutionDir, out _, out _);
                 if (solutionDir == null)
                 {
